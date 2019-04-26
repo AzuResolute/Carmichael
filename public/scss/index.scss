@@ -6,8 +6,11 @@
 // See an example import below
 // @import './component.scss';
 
+@import './reporting.scss';
+
 body {
   font-family: sans-serif;
+  margin-left: 178px;
 
   a {
     text-decoration: none;
@@ -17,13 +20,10 @@ body {
     display: block;
   }
 
-  nav a {
-    display: inline-block;
-    margin: 1em;
-  }
-
   form div {
     margin: 1em;
     display: inline-block;
   }
+
+
 }

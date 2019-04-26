@@ -19,18 +19,24 @@ const getAllCategories = categories => ({
   categories
 })
 
-export const getAllProductsThunk = () => async dispatch => {
+export const getAllProductsThunk = (sortBy, sortOrder) => async dispatch => {
   try {
-    const {data} = await axios.get('/api/products')
+    if(sortBy === 'Category') {
+      sortBy = 'CategoryID'
+    }
+    const {data} = await axios.get(`/api/products/${sortBy}/${sortOrder}`)
     dispatch(getAllProducts(data))
   } catch (error) {
       console.error(error)
   }
 }
 
-export const getProductsByCategoryThunk = categoryID => async dispatch => {
+export const getProductsByCategoryThunk = (sortBy, sortOrder, categoryID) => async dispatch => {
   try {
-    const {data} = await axios.get(`/api/products/${categoryID}`)
+    if(sortBy === 'Category') {
+      sortBy = 'CategoryID'
+    }
+    const {data} = await axios.get(`/api/products/${sortBy}/${sortOrder}/${categoryID}`)
     dispatch(getProductsByCategory(data))
   } catch (error) {
       console.error(error)
@@ -48,7 +54,7 @@ export const getAllCategoriesThunk = () => async dispatch => {
 
 const initialState = {
   products: [],
-  categories: []
+  categories: [],
 }
 
 export default function (state = initialState, action) {
@@ -57,10 +63,10 @@ export default function (state = initialState, action) {
     case GET_ALL_PRODUCTS:
     case GET_PRODUCTS_BY_CATEGORY:
       newState.products = action.products
-      break
+      return newState
     case GET_ALL_CATEGORIES:
       newState.categories = action.categories
-      break
+      return newState
     default:
       return state
   }

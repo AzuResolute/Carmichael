@@ -87,7 +87,7 @@ async function seed() {
     await Product.loadSeed(seedProduct[i]);
   }
 
-  // console.log(SeedSheetLoader(4));
+  console.log(SeedSheetLoader(5));
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)

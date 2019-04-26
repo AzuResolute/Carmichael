@@ -1,7 +1,11 @@
+// Try renaming this file to the name of one of your components and writing scss here
+
 * {
   font-family: arial, sans-serif;
   color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
 
 .Home {
   margin: 0px;
@@ -10,31 +14,40 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("/images/background.jpg");
-  background-size: cover; }
+  background-image: url('/images/background.jpg');
+  background-size: cover;
+}
 
 .Home h1 {
   -webkit-animation: h1 10s linear infinite;
   animation: h1 10s linear infinite;
-  align-self: center; }
+  align-self: center;
+}
 
 .Home img {
   height: 30%;
   width: 30%;
   margin: 250px;
-  -webkit-animation: fadein 2s; }
+  -webkit-animation: fadein 2s;
+}
 
 @-webkit-keyframes fadein {
   from {
-    opacity: 0; }
+    opacity: 0;
+  }
   to {
-    opacity: 1; } }
+    opacity: 1;
+  }
+}
 
 @-webkit-keyframes h1 {
   0% {
-    -webkit-transform: translateX(100%); }
+    -webkit-transform: translateX(100%);
+  }
   100% {
-    -webkit-transform: translateX(-100%); } }
+    -webkit-transform: translateX(-100%);
+  }
+}
 
 html {
   min-height: 100%;
@@ -48,74 +61,83 @@ html {
   background: -moz-linear-gradient(to left top, #6a6a70, #061d48);
   background: -ms-linear-gradient(to left top, #6a6a70, #061d48);
   background: -o-linear-gradient(to left top, #6a6a70, #061d48);
-  background: linear-gradient(to left top, #6a6a70, #061d48); }
+  background: linear-gradient(to left top, #6a6a70, #061d48);
+}
 
 nav {
-  background-image: url("/images/background.jpg");
+  background-image: url('/images/background.jpg');
   background-size: auto;
-  height: 100%;
-  /* Full-height: remove this if you want "auto" height */
-  width: 160px;
-  /* Set the width of the sidebar */
-  position: fixed;
-  /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1;
-  /* Stay on top */
-  top: 0;
-  /* Stay at the top */
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
   left: 0;
-  overflow-x: hidden;
-  /* Disable horizontal scroll */
-  border: ridge 5px gray; }
+  // background: linear-gradient(#0b4fce, #d7d9df); /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  border: ridge 5px gray;
+}
 
 .NavSegment,
 nav a {
   text-decoration: none;
   display: block;
-  border: ridge 2px; }
+  border: ridge 2px;
+}
 
 .NavSegment {
   padding: 6px 8px 6px 16px;
-  font-size: 20px; }
+  font-size: 20px;
+}
 
 nav img {
   height: 75%;
-  width: 75%; }
+  width: 75%;
+}
 
 nav a {
   padding: 6px 8px 6px 30px;
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 nav.Selected {
-  background-color: #1a72e6; }
+  background-color: #1a72e6;
+}
 
 nav a:hover {
   background-color: #1a72e6;
-  transition: 1s; }
+  transition: 1s;
+}
 
 .ReportingOptions {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px; }
+  margin-top: 30px;
+}
 
 .OptionComponent {
-  display: flex; }
+  display: flex;
+}
 
 table {
   margin-top: 30px;
   border: 3px solid white;
-  -webkit-animation: fadein 2s; }
+  -webkit-animation: fadein 2s;
+}
 
 th {
   background-color: #4f0d91;
-  color: whitesmoke; }
+  color: whitesmoke;
+}
 
 td {
-  background-color: #10397a; }
+  background-color: #10397a;
+}
 
 td,
 th {
-  padding: 5px 15px 5px 15px; }
+  padding: 5px 15px 5px 15px;
+}
 
 table,
 th,
@@ -123,25 +145,15 @@ td {
   border: 1px solid black;
   border-collapse: collapse;
   border-spacing: 5px;
-  border-color: #4f0d91; }
+  border-color: #4f0d91;
+}
 
 select {
-  text-align: center; }
+  text-align: center;
+}
 
 .Container {
   display: flex;
   flex-direction: column;
-  justify-content: center; }
-
-body {
-  font-family: sans-serif;
-  margin-left: 178px; }
-  body a {
-    text-decoration: none; }
-  body label {
-    display: block; }
-  body form div {
-    margin: 1em;
-    display: inline-block; }
-
-/*# sourceMappingURL=style.css.map*/
+  justify-content: center;
+}

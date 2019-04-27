@@ -68,7 +68,7 @@ nav {
   background-image: url('/images/background.jpg');
   background-size: auto;
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 160px; /* Set the width of the sidebar */
+  width: 180px; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
@@ -115,8 +115,28 @@ nav a:hover {
   margin-top: 30px;
 }
 
+.ReportingOptions.OptionComponent select {
+  display: flex;
+  color: black;
+}
+
+.OptionComponent button {
+  color: black;
+  text-shadow: none;
+  font-weight: bolder;
+  font-size: 10pt;
+}
+
+.OptionComponent select {
+  color: black;
+  text-shadow: none;
+  font-weight: bolder;
+  font-size: 10pt;
+}
+
 .OptionComponent {
   display: flex;
+  align-items: center;
 }
 
 table {
@@ -156,4 +176,73 @@ select {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.InputForm{
+  display: flex;
+  border: ridge 2px white;
+}
+
+.OrderReqInfo{
+  border: ridge 2px white;
+  background-color: slateblue;
+  max-width: 40%;
+}
+
+.OrderReqPurchase{
+  border: ridge 2px white;
+  background-color: slateblue;
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#CartTable {
+  align-self: center;
+}
+
+.Test {
+  border: solid 5px white;
+}
+
+.Header {
+  display: flex;
+  justify-content: center;
+}
+
+.SubmitOrder {
+  border: 4px ridge #061d48;
+  display: flex;
+  background-color: #1ab675;
+  justify-content: center;
+  padding: 10px;
+}
+
+.SubmitOrder {
+  border: 4px ridge #061d48;
+  display: flex;
+  background-color: #1ab675;
+  justify-content: center;
+  padding: 10px;
+  -webkit-animation: xition 2s;
+}
+
+.False {
+  background-color: #b61a1a;
+  -webkit-animation: xition 2s;
+}
+
+@-webkit-keyframes xition {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.RemoveButton {
+  background-color: slateblue;
 }

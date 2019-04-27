@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const GET_ALL_PRODUCTS = 'GET_ALL_PRODUCTS'
 const GET_PRODUCTS_BY_CATEGORY = 'GET_PRODUCTS_BY_CATEGORY'
+const GET_TARGET_PRODUCT = 'GET_TARGET_PRODUCT'
 const GET_ALL_CATEGORIES = 'GET_ALL_CATEGORIES'
 
 const getAllProducts = products => ({
@@ -12,6 +13,11 @@ const getAllProducts = products => ({
 const getProductsByCategory = products => ({
   type: GET_PRODUCTS_BY_CATEGORY,
   products
+})
+
+const getTargetProduct = product => ({
+  type: GET_TARGET_PRODUCT,
+  product
 })
 
 const getAllCategories = categories => ({
@@ -43,6 +49,15 @@ export const getProductsByCategoryThunk = (sortBy, sortOrder, categoryID) => asy
   }
 }
 
+export const getTargetProductThunk = (id) => async dispatch => {
+  try {
+    const {data} = await axios.get(`/api/products/target/${id}`)
+    dispatch(getTargetProduct(data))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const getAllCategoriesThunk = () => async dispatch => {
   try {
     const {data} = await axios.get('/api/products/categories')
@@ -55,6 +70,7 @@ export const getAllCategoriesThunk = () => async dispatch => {
 const initialState = {
   products: [],
   categories: [],
+  targetProduct: {}
 }
 
 export default function (state = initialState, action) {
@@ -63,6 +79,9 @@ export default function (state = initialState, action) {
     case GET_ALL_PRODUCTS:
     case GET_PRODUCTS_BY_CATEGORY:
       newState.products = action.products
+      return newState
+    case GET_TARGET_PRODUCT:
+      newState.targetProduct = action.product
       return newState
     case GET_ALL_CATEGORIES:
       newState.categories = action.categories

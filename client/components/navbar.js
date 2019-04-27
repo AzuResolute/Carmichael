@@ -28,18 +28,26 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           </Link>
           <div>
             <div className = "NavSegment">Dashboard: </div>
-            <Link to="/">Overview (P)</Link>
-            <Link to="/">Inventory (P)</Link>
-            <Link to="/">Customer (P)</Link>
-            <Link to="/">Supplier (P)</Link>
+            <Link to="/">Overview</Link>
+            <Link to="/">Inventory</Link>
+            <Link to="/">Customer</Link>
           </div>
 
           <div>
             <div className = "NavSegment">Reporting: </div>
             <Link to="/reporting/inventory">Inventory</Link>
-            <Link to="/">Orders (P)</Link>
-            <Link to="/">Accounts (P)</Link>
+            <Link to="/reporting/orders">Orders</Link>
+            <Link to="/">Accounts</Link>
           </div>
+
+          <div>
+            <div className = "NavSegment">Management: </div>
+            <Link to="/management/orderrequest">Order Request</Link>
+            <Link to="/">Payment Received</Link>
+            <Link to="/">Update Inventory</Link>
+            <Link to="/">Update Financials</Link>
+          </div>
+
         </div>
       )}
     </nav>

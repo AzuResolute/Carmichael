@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Product, Category} = require('../server/db/models')
+const {User, Product, Category, Order, OrderDetails, Customer} = require('../server/db/models')
 const XLSX = require('xlsx')
 const abc = {
   1: 'A',
@@ -78,16 +78,46 @@ async function seed() {
 
   let seedCategory = SeedSheetLoader(0);
   let seedProduct = SeedSheetLoader(5);
+  let seedCustomer = SeedSheetLoader(1);
+  let seedOrder = SeedSheetLoader(4);
+  let seedOrderDetails = SeedSheetLoader(3);
 
   for(let i = 0; i < seedCategory.length; i++) {
     await Category.loadSeed(seedCategory[i]);
   }
 
+  console.log("Cat Complete");
+
   for(let i = 0; i < seedProduct.length; i++) {
     await Product.loadSeed(seedProduct[i]);
   }
 
-  console.log(SeedSheetLoader(5));
+  console.log("Prod Complete");
+
+  for(let i = 0; i < seedCustomer.length; i++) {
+    await Customer.loadSeed(seedCustomer[i]);
+  }
+
+  console.log("Cust Complete");
+
+  for(let i = 0; i < seedOrder.length; i++) {
+    await Order.loadSeed(seedOrder[i]);
+  }
+
+  console.log("Order Complete");
+
+  for(let i = 0; i < seedOrderDetails.length; i++) {
+    await OrderDetails.loadSeed(seedOrderDetails[i]);
+  }
+
+  console.log("OrderDetails Complete");
+
+  // let arr = [];
+  // for(let i = 0; i < seedOrderDetails.length; i++) {
+  //   arr.push(OrderDetails.testLoadSeed(seedOrderDetails[i]));
+  // }
+
+  // console.log(arr);
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)

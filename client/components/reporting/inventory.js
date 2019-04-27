@@ -16,9 +16,9 @@ class InventoryReporting extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.onLoadCategories()
-    this.props.onLoadProducts(
+  async componentDidMount() {
+    await this.props.onLoadCategories()
+    await this.props.onLoadProducts(
       this.state.currentSortBy,
       this.state.currentSortOrder,
       this.state.currentCategory
@@ -66,7 +66,8 @@ class InventoryReporting extends Component {
       'Category',
       'QuantityPerUnit',
       'UnitPrice',
-      'UnitsInStock'
+      'UnitsInStock',
+      'Obselete'
     ]
     if (!products) {
       return <div> Loading ... </div>
@@ -117,6 +118,7 @@ class InventoryReporting extends Component {
               <td>{prod.QuantityPerUnit}</td>
               <td>${(prod.UnitPrice / 100).toFixed(2)}</td>
               <td>{prod.UnitsInStock}</td>
+              <td>{prod.Discontinued ? "Yes" : "No"}</td>
             </tr>
           ))}
         </table>

@@ -6,13 +6,14 @@ import {
   getAllCategoriesThunk
 } from '../../store/inventory'
 
-class InventoryReporting extends Component {
+class UpdateInventory extends Component {
   constructor() {
     super()
     this.state = {
       currentCategory: 'All Categories',
       currentSortBy: 'ProductID',
-      currentSortOrder: 'ASC'
+      currentSortOrder: 'ASC',
+      initProducts: []
     }
   }
 
@@ -58,16 +59,33 @@ class InventoryReporting extends Component {
     )
   }
 
+  setInitial = async () => {
+    await this.setState({
+      initProducts: this.props.products
+    })
+  }
+
+  updateInventoryHandler = async () => {
+    await this.props.onLoadProducts(
+      this.state.currentSortBy,
+      this.state.currentSortOrder,
+      this.state.currentCategory
+    )
+  }
+
   render() {
+    let {initProducts} = this.state
+    console.log(initProducts)
     let {categories, products} = this.props
     let productProps = [
       'ProductID',
       'ProductName',
       'Category',
-      'QuantityPerUnit',
       'UnitPrice',
-      'UnitsInStock',
-      'Obselete'
+      'Previous Stock',
+      'Delta',
+      'New Stock',
+      'Inventory ∆'
     ]
     if (!products || !categories) {
       return <div> Loading ... </div>
@@ -107,6 +125,31 @@ class InventoryReporting extends Component {
           </div>
         </div>
 
+        <div className="ReportingOptions">
+          <div className="OptionComponent">
+            {initProducts.length === 0 ? (
+              <div className="SubmitOrder Ready" onClick={this.setInitial}>
+                Set Checkpoint
+              </div>
+            ) : (
+              <div className="SubmitOrder">Checkpoint Set</div>
+            )}
+          </div>
+
+          <div className="OptionComponent">
+            {initProducts.length === 0 ? (
+              <div className="SubmitOrder Disabled">Update Inventory</div>
+            ) : (
+              <div
+                className="SubmitOrder"
+                onClick={this.updateInventoryHandler}
+              >
+                Update Inventory
+              </div>
+            )}
+          </div>
+        </div>
+
         <table>
           <tr>{productProps.map(key => <th key>{key}</th>)}</tr>
 
@@ -115,10 +158,35 @@ class InventoryReporting extends Component {
               <td>{prod.ProductID}</td>
               <td>{prod.ProductName}</td>
               <td>{categories[prod.CategoryID - 1].CategoryName}</td>
-              <td>{prod.QuantityPerUnit}</td>
               <td>${(prod.UnitPrice / 100).toFixed(2)}</td>
+              <td>
+                {initProducts[0]
+                  ? initProducts.find(
+                      initprod => initprod.ProductID === prod.ProductID
+                    ).UnitsInStock
+                  : null}
+              </td>
+              <td>
+                {initProducts[0]
+                  ? prod.UnitsInStock -
+                    initProducts.find(
+                      initprod => initprod.ProductID === prod.ProductID
+                    ).UnitsInStock
+                  : null}
+              </td>
               <td>{prod.UnitsInStock}</td>
-              <td>{prod.Discontinued ? "Yes" : "No"}</td>
+              <td>
+                {initProducts[0]
+                  ? `$${(
+                      (prod.UnitsInStock -
+                        initProducts.find(
+                          initprod => initprod.ProductID === prod.ProductID
+                        ).UnitsInStock) *
+                      prod.UnitPrice /
+                      100
+                    ).toFixed(2)}`
+                  : null}
+              </td>
             </tr>
           ))}
         </table>
@@ -145,4 +213,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(InventoryReporting)
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateInventory)

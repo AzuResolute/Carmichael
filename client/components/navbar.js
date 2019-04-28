@@ -43,9 +43,9 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           <div>
             <div className = "NavSegment">Management: </div>
             <Link to="/management/orderrequest">Order Request</Link>
-            <Link to="/">Payment Received</Link>
-            <Link to="/">Update Inventory</Link>
-            <Link to="/">Update Financials</Link>
+            <Link to="/management/updateinventory">Update Inventory</Link>
+            {/* <Link to="/">Payment Received</Link>
+            <Link to="/">Update Financials</Link> */}
           </div>
 
         </div>

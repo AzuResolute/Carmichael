@@ -183,18 +183,19 @@ select {
   display: flex;
   background-color: #1ab675;
   justify-content: center;
-  padding: 10px; }
-
-.SubmitOrder {
-  border: 4px ridge #061d48;
-  display: flex;
-  background-color: #1ab675;
-  justify-content: center;
   padding: 10px;
   -webkit-animation: xition 2s; }
 
 .False {
   background-color: #b61a1a;
+  -webkit-animation: xition 2s; }
+
+.Ready {
+  background-color: #ddff01;
+  -webkit-animation: xition 2s; }
+
+.Disabled {
+  background-color: #bcbcbb;
   -webkit-animation: xition 2s; }
 
 @-webkit-keyframes xition {

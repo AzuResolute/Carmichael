@@ -1,10 +1,10 @@
 import axios from 'axios'
 import history from '../history'
+import {OrderRequestToExcel} from '../../utilities'
 
 const GET_ALL_ORDERS = 'GET_ALL_ORDERS'
 const GET_ORDERS_BY_CUSTOMERS = 'GET_ORDERS_BY_CUSTOMERS'
 const GET_ALL_CUSTOMERS = 'GET_ALL_CUSTOMERS'
-const CREATE_NEW_ORDER = 'CREATE_NEW_ORDER'
 
 const getAllOrders = orders => ({
   type: GET_ALL_ORDERS,
@@ -54,10 +54,9 @@ export const getAllCustomersThunk = () => async dispatch => {
   }
 }
 
-export const createNewOrderThunk = (state) => async () => {
+export const createNewOrderThunk = state => async () => {
   try {
-    // Excel functionality
-    console.log("Activated NewOrder Thunk")
+    OrderRequestToExcel(state)
     await axios.post('/api/orders/OrderRequest', state)
     history.push('/reporting/orders')
   } catch (error) {

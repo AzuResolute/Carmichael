@@ -1,9 +1,11 @@
 import axios from 'axios'
+import {UpdateInventoryThroughExcel} from '../../utilities'
 
 const GET_ALL_PRODUCTS = 'GET_ALL_PRODUCTS'
 const GET_PRODUCTS_BY_CATEGORY = 'GET_PRODUCTS_BY_CATEGORY'
 const GET_TARGET_PRODUCT = 'GET_TARGET_PRODUCT'
 const GET_ALL_CATEGORIES = 'GET_ALL_CATEGORIES'
+const UPDATE_PRODUCTS = 'UPDATE_PRODUCTS'
 
 const getAllProducts = products => ({
   type: GET_ALL_PRODUCTS,
@@ -25,31 +27,39 @@ const getAllCategories = categories => ({
   categories
 })
 
+// const updateProduct => ({})
+
 export const getAllProductsThunk = (sortBy, sortOrder) => async dispatch => {
   try {
-    if(sortBy === 'Category') {
+    if (sortBy === 'Category') {
       sortBy = 'CategoryID'
     }
     const {data} = await axios.get(`/api/products/${sortBy}/${sortOrder}`)
     dispatch(getAllProducts(data))
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
 }
 
-export const getProductsByCategoryThunk = (sortBy, sortOrder, categoryID) => async dispatch => {
+export const getProductsByCategoryThunk = (
+  sortBy,
+  sortOrder,
+  categoryID
+) => async dispatch => {
   try {
-    if(sortBy === 'Category') {
+    if (sortBy === 'Category') {
       sortBy = 'CategoryID'
     }
-    const {data} = await axios.get(`/api/products/${sortBy}/${sortOrder}/${categoryID}`)
+    const {data} = await axios.get(
+      `/api/products/${sortBy}/${sortOrder}/${categoryID}`
+    )
     dispatch(getProductsByCategory(data))
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
 }
 
-export const getTargetProductThunk = (id) => async dispatch => {
+export const getTargetProductThunk = id => async dispatch => {
   try {
     const {data} = await axios.get(`/api/products/target/${id}`)
     dispatch(getTargetProduct(data))
@@ -63,7 +73,7 @@ export const getAllCategoriesThunk = () => async dispatch => {
     const {data} = await axios.get('/api/products/categories')
     dispatch(getAllCategories(data))
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
 }
 
@@ -73,7 +83,7 @@ const initialState = {
   targetProduct: {}
 }
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   let newState = {...state}
   switch (action.type) {
     case GET_ALL_PRODUCTS:

@@ -14,7 +14,7 @@ class OrderReceived extends Component {
       Cart: [],
       Freight: 0,
       TotalRevenue: 0,
-      TotalCost: 0
+      TotalCost: 0,
     }
   }
 
@@ -26,7 +26,6 @@ class OrderReceived extends Component {
 
   customerHandler = async evt => {
     let {orders} = this.props
-    console.log(evt.target.value)
     await this.setState({
       InvoiceNumber: orders[orders.length - 1].OrderID + 1,
       SelectedCustomer: evt.target.value
@@ -41,6 +40,10 @@ class OrderReceived extends Component {
 
   currentProdHandler = async evt => {
     await this.props.onLoadTargetProduct(evt.target.value)
+    document.querySelector('#QuantitySelector').value = 0
+    await this.setState({
+      SelectedQuantity: 0
+    })
   }
 
   currentQuantityHandler = async evt => {
@@ -70,6 +73,9 @@ class OrderReceived extends Component {
       })
 
       newCart.push(prodToCart)
+
+      document.querySelector('#QuantitySelector').value = 0
+      document.querySelector('#ProductSelector').value = 5
 
       await this.setState({
         Cart: newCart,
@@ -108,7 +114,8 @@ class OrderReceived extends Component {
       if (num === 0) {
         return [<option key={0}>Out Of Stock</option>]
       }
-      for (let i = 0; i < num; i++) {
+      arr.push(<option value={0} selected>{0}</option>)
+      for (let i = 1; i <= num; i++) {
         arr.push(<option value={i}>{i}</option>)
       }
       return arr
@@ -206,6 +213,7 @@ class OrderReceived extends Component {
               <select
                 name="products"
                 size="1"
+                id="ProductSelector"
                 onChange={this.currentProdHandler}
               >
                 <option value={5}>Select a Product</option>
@@ -222,6 +230,7 @@ class OrderReceived extends Component {
               <select
                 name="quantity"
                 size="1"
+                id="QuantitySelector"
                 onChange={this.currentQuantityHandler}
               >
                 {QuantEnumerator(targetProduct.UnitsInStock).map(opt => opt)}
@@ -235,7 +244,7 @@ class OrderReceived extends Component {
             </div>
 
             <div className="OptionComponent">
-              <table>
+              <table id="OrderRequestTable">
                 <tr>{productProps.map(key => <th key>{key}</th>)}</tr>
 
                 {Cart.map((prod, i) => (

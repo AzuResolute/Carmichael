@@ -56,8 +56,12 @@ export const getAllCustomersThunk = () => async dispatch => {
 
 export const createNewOrderThunk = state => async () => {
   try {
+    let {Cart} = state
     OrderRequestToExcel(state)
     await axios.post('/api/orders/OrderRequest', state)
+    for(let i = 0; i < Cart.length; i++) {
+      await axios.put(`/api/products/OrderRequest`, Cart[i])
+    }
     history.push('/reporting/orders')
   } catch (error) {
     console.error(error)

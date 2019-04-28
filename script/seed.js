@@ -2,7 +2,7 @@
 
 const db = require('../server/db')
 const {User, Product, Category, Order, OrderDetails, Customer} = require('../server/db/models')
-const {SeedSheetLoader, UpdateInventoryThroughExcel} = require('../utilities/')
+const {SeedSheetLoader} = require('../utilities/')
 
 async function seed() {
   await db.sync({force: true})
@@ -46,8 +46,6 @@ async function seed() {
   for(let i = 0; i < seedOrderDetails.length; i++) {
     await OrderDetails.loadSeed(seedOrderDetails[i]);
   }
-
-  // console.log(UpdateInventoryThroughExcel())
 
   console.log("OrderDetails Complete");
 

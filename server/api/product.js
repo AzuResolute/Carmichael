@@ -22,21 +22,21 @@ router.get('/target/:ProductID', async (request, response, next) => {
   }
 })
 
-// router.put('/updateinventory/', async (request, response, next) => {
-//   try {
-//     let {ProductID, Quantity} = request.body
-//     let target = await Product.findOne({where:{
-//       ProductID
-//     }})
-//     let newQuantity = Math.max(target.UnitsInStock + Quantity,0)
-//     await target.update({
-//       UnitsInStock: newQuantity
-//     })
-//     response.json(target)
-//   } catch (error) {
-//     console.log(error)
-//   }
-// })
+router.put('/OrderRequest/', async (request, response, next) => {
+  try {
+    let {ProductID, Quantity} = request.body
+    let target = await Product.findOne({where:{
+      ProductID
+    }})
+    let newQuantity = Math.max(target.UnitsInStock - Quantity,0)
+    await target.update({
+      UnitsInStock: newQuantity
+    })
+    response.json(target)
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 router.get('/:sortBy/:sortOrder', async (request, response, next) => {
   try {

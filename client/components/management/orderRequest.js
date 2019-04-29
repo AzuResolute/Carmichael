@@ -1,7 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {getAllProductsThunk, getTargetProductThunk} from '../../store/inventory'
-import {getAllCustomersThunk, getAllOrdersThunk, createNewOrderThunk} from '../../store/orders'
+import {
+  getAllCustomersThunk,
+  getAllOrdersThunk,
+  createNewOrderThunk
+} from '../../store/orders'
+import {NumberWithCommas} from '../../../utilities'
 
 class OrderReceived extends Component {
   constructor() {
@@ -14,7 +19,7 @@ class OrderReceived extends Component {
       Cart: [],
       Freight: 0,
       TotalRevenue: 0,
-      TotalCost: 0,
+      TotalCost: 0
     }
   }
 
@@ -55,18 +60,25 @@ class OrderReceived extends Component {
   addToCart = async () => {
     if (this.props.targetProduct && this.state.SelectedQuantity > 0) {
       let {ProductID, ProductName, UnitPrice} = this.props.targetProduct
-      let {SelectedQuantity, Cart, TotalRevenue, TotalCost, Freight} = this.state
+      let {
+        SelectedQuantity,
+        Cart,
+        TotalRevenue,
+        TotalCost,
+        Freight
+      } = this.state
       let gpm = 20
       let freightPrem = 75
       let prodToCart = {
         ProductID,
         ProductName,
         UnitCost: Number(UnitPrice),
-        UnitRevenue: Number(UnitPrice * (1 + gpm/100)),
+        UnitRevenue: Number(UnitPrice * (1 + gpm / 100)),
         Quantity: SelectedQuantity,
         GrossProfitMargin: gpm,
         ProductCost: Number(UnitPrice) * Number(SelectedQuantity),
-        ProductRevenue: Number(UnitPrice * (1 + gpm/100)) * Number(SelectedQuantity)
+        ProductRevenue:
+          Number(UnitPrice * (1 + gpm / 100)) * Number(SelectedQuantity)
       }
       let newCart = Cart.filter(prod => {
         return prod.ProductID !== ProductID
@@ -80,11 +92,22 @@ class OrderReceived extends Component {
       await this.setState({
         Cart: newCart,
         SelectedQuantity: 0,
-        Freight: Freight + (freightPrem * SelectedQuantity),
-        TotalRevenue: TotalRevenue + prodToCart.ProductRevenue + (freightPrem * SelectedQuantity),
+        Freight: Freight + freightPrem * SelectedQuantity,
+        TotalRevenue:
+          TotalRevenue +
+          prodToCart.ProductRevenue +
+          freightPrem * SelectedQuantity,
         TotalCost: TotalCost + prodToCart.ProductCost
       })
     }
+  }
+
+  removeFromCart = async evt => {
+    let newCart = this.state.Cart
+    newCart.splice(evt.target.value, 1)
+    await this.setState({
+      cart: newCart
+    })
   }
 
   submitOrderRequest = () => {
@@ -93,14 +116,22 @@ class OrderReceived extends Component {
 
   render() {
     let {customers, products, targetProduct} = this.props
-    let {DeliveryTime, Cart, TotalRevenue, SelectedCustomer, InvoiceNumber, Freight} = this.state
+    let {
+      DeliveryTime,
+      Cart,
+      TotalRevenue,
+      SelectedCustomer,
+      InvoiceNumber,
+      Freight
+    } = this.state
     let productProps = [
       '#',
       'ProductID',
       'ProductName',
       'Unit Price',
       'Quantity',
-      'Product Total'
+      'Product Total',
+      ''
     ]
     let timing = {
       OneMonth: 30,
@@ -114,7 +145,11 @@ class OrderReceived extends Component {
       if (num === 0) {
         return [<option key={0}>Out Of Stock</option>]
       }
-      arr.push(<option value={0} selected>{0}</option>)
+      arr.push(
+        <option value={0} selected>
+          {0}
+        </option>
+      )
       for (let i = 1; i <= num; i++) {
         arr.push(<option value={i}>{i}</option>)
       }
@@ -131,13 +166,10 @@ class OrderReceived extends Component {
             <td />
             <td />
             <td />
-            <td className="RemoveButton">
-              <img
-                src="/images/Remove.png"
-                alt="Remove Products"
-                width="25"
-                height="25"
-              />
+            <td>
+              <button type="button" disabled>
+                Remove
+              </button>
             </td>
           </tr>
         )
@@ -151,13 +183,12 @@ class OrderReceived extends Component {
         </div>
         <form className="InputForm">
           <div className="OrderReqInfo">
-
             <div className="OptionComponent">
-              {SelectedCustomer ?
-              <div>Invoice: {InvoiceNumber}</div>
-              :
-              <div> Pending Invoice Number</div>
-            }
+              {SelectedCustomer ? (
+                <div>Invoice: {InvoiceNumber}</div>
+              ) : (
+                <div> Pending Invoice Number</div>
+              )}
             </div>
 
             <div className="OptionComponent">
@@ -176,7 +207,7 @@ class OrderReceived extends Component {
             <div className="OptionComponent">
               <div>Customers: </div>
               <select name="customers" size="1" onChange={this.customerHandler}>
-                <option value='SELECT ID'>Select ID</option>
+                <option value="SELECT ID">Select ID</option>
                 {customers.map(cust => (
                   <option key={cust.CustomerID} value={cust.CustomerID}>
                     {cust.CompanyName} ({cust.CustomerID})
@@ -196,15 +227,18 @@ class OrderReceived extends Component {
               </select>
             </div>
 
-            {(Cart.length && SelectedCustomer !== 'SELECT ID') ?
-            <div className="OptionComponent SubmitOrder" onClick={this.submitOrderRequest}>
-              <div>Submit Order</div>
-            </div>
-            :
-            <div className="OptionComponent SubmitOrder False">
-              <div>Submit Order</div>
-            </div>
-            }
+            {Cart.length && SelectedCustomer !== 'SELECT ID' ? (
+              <div
+                className="OptionComponent SubmitOrder"
+                onClick={this.submitOrderRequest}
+              >
+                <div>Submit Order</div>
+              </div>
+            ) : (
+              <div className="OptionComponent SubmitOrder False">
+                <div>Submit Order</div>
+              </div>
+            )}
           </div>
 
           <div className="OrderReqPurchase">
@@ -252,16 +286,23 @@ class OrderReceived extends Component {
                     <td>{i + 1}</td>
                     <td>{prod.ProductID}</td>
                     <td>{prod.ProductName}</td>
-                    <td>${(prod.UnitRevenue / 100).toFixed(2)}</td>
-                    <td>{prod.Quantity}</td>
-                    <td>${(prod.ProductRevenue / 100).toFixed(2)}</td>
-                    <td className="RemoveButton">
-                      <img
-                        src="/images/Remove.png"
-                        alt="Remove Products"
-                        width="25"
-                        height="25"
-                      />
+                    <td>
+                      ${NumberWithCommas((prod.UnitRevenue / 100).toFixed(2))}
+                    </td>
+                    <td>{NumberWithCommas(prod.Quantity)}</td>
+                    <td>
+                      ${NumberWithCommas(
+                        (prod.ProductRevenue / 100).toFixed(2)
+                      )}
+                    </td>
+                    <td value={i} onClick={this.removeFromCart}>
+                      <button
+                        type="button"
+                        value={i}
+                        onClick={this.removeFromCart}
+                      >
+                        Remove
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -271,12 +312,14 @@ class OrderReceived extends Component {
 
                 <tr>
                   <td colSpan="5">Freight Cost</td>
-                  <td>${(Freight/100).toFixed(2)}</td>
+                  <td>${NumberWithCommas((Freight / 100).toFixed(2))}</td>
+                  <td />
                 </tr>
 
                 <tr>
                   <td colSpan="5">Grand Total</td>
-                  <td>${(TotalRevenue/100).toFixed(2)}</td>
+                  <td>${NumberWithCommas((TotalRevenue / 100).toFixed(2))}</td>
+                  <td />
                 </tr>
               </table>
             </div>
@@ -307,7 +350,7 @@ const mapDispatchToProps = dispatch => ({
   onLoadOrders: (sortBy, sortOrder) => {
     dispatch(getAllOrdersThunk(sortBy, sortOrder))
   },
-  onCreateOrder: (state) => {
+  onCreateOrder: state => {
     dispatch(createNewOrderThunk(state))
   }
 })

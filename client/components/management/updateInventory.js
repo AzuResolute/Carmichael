@@ -5,6 +5,7 @@ import {
   getProductsByCategoryThunk,
   getAllCategoriesThunk
 } from '../../store/inventory'
+import {NumberWithCommas} from '../../../utilities'
 
 class UpdateInventory extends Component {
   constructor() {
@@ -158,7 +159,7 @@ class UpdateInventory extends Component {
               <td>{prod.ProductID}</td>
               <td>{prod.ProductName}</td>
               <td>{categories[prod.CategoryID - 1].CategoryName}</td>
-              <td>${(prod.UnitPrice / 100).toFixed(2)}</td>
+              <td>${NumberWithCommas((prod.UnitPrice / 100).toFixed(2))}</td>
               <td>
                 {initProducts[0]
                   ? initProducts.find(
@@ -168,23 +169,23 @@ class UpdateInventory extends Component {
               </td>
               <td>
                 {initProducts[0]
-                  ? prod.UnitsInStock -
+                  ? NumberWithCommas(prod.UnitsInStock -
                     initProducts.find(
                       initprod => initprod.ProductID === prod.ProductID
-                    ).UnitsInStock
+                    ).UnitsInStock)
                   : null}
               </td>
               <td>{prod.UnitsInStock}</td>
               <td>
                 {initProducts[0]
-                  ? `$${(
+                  ? `$${NumberWithCommas((
                       (prod.UnitsInStock -
                         initProducts.find(
                           initprod => initprod.ProductID === prod.ProductID
                         ).UnitsInStock) *
                       prod.UnitPrice /
                       100
-                    ).toFixed(2)}`
+                    ).toFixed(2))}`
                   : null}
               </td>
             </tr>

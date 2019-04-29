@@ -1,5 +1,6 @@
 const XLSX = require('xlsx')
-// const fs = require('fs')
+const d3 = require('d3')
+
 const NorthwindPath =
   '/Users/janczarinajavier/Carmichael/utilities/Northwind.xls'
 const OrderRequestPath =
@@ -9,7 +10,7 @@ const UpdateInventoryPath =
 const UpdateInventoryPathBackUp =
   '/Users/janczarinajavier/Carmichael/utilities/UpdateInventory.xlsx'
 const Test = '/Users/janczarinajavier/Carmichael/utilities/test.xlsx'
-  const abc = {
+const abc = {
   1: 'A',
   2: 'B',
   3: 'C',
@@ -145,25 +146,151 @@ const OrderRequestToExcel = state => {
 }
 
 const UpdateInventoryThroughExcel = async () => {
-
   const UpdateInventory = await XLSX.readFile(UpdateInventoryPath)
 
   let dataArr = []
 
   let currentSheet = UpdateInventory.Sheets[UpdateInventory.SheetNames[0]]
 
-  for(let i = 9; i <= 20; i++) {
+  for (let i = 9; i <= 20; i++) {
     let ProductName = currentSheet[`B${i}`] ? currentSheet[`B${i}`].v : null
     let ProductID = currentSheet[`C${i}`] ? currentSheet[`C${i}`].v : null
     let Quantity = currentSheet[`D${i}`] ? currentSheet[`D${i}`].v : null
-    if(ProductName && Quantity) {
+    if (ProductName && Quantity) {
       dataArr.push({ProductName, ProductID, Quantity})
     }
   }
 
-  console.log(dataArr)
-
   return dataArr
 }
 
-module.exports = {DateExcel2JavaScript, SeedSheetLoader, OrderRequestToExcel, UpdateInventoryThroughExcel}
+const NumberWithCommas = x => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+const Graphify = async (svg, data, high, viewMode) => {
+  const max = 400
+  const barWidth = 40
+  const barPadding = 5
+  const minimum = 1
+  const xStart = 160
+  const yStart = 500
+
+  const xaxisline = svg
+    .append('line')
+    .attr('y1', yStart + 1)
+    .attr('y2', yStart + 1)
+    .attr('x1', xStart - 20)
+    .attr(
+      'x2',
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'black')
+
+  const yaxisline = svg
+    .append('line')
+    .attr('y1', yStart + 1)
+    .attr('y2', yStart - max)
+    .attr('x1', xStart - 20)
+    .attr('x2', xStart - 20)
+    .attr('stroke-width', 2)
+    .attr('stroke', 'black')
+
+  const baseTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart + 1)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(minimum / 100).toFixed(2)}`)
+
+  const firstTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 4)
+    .attr('y2', yStart - max / 4)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const secondTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart - max / 2)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(high / 100 / 2).toFixed(2)}`)
+
+  const secondTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 2)
+    .attr('y2', yStart - max / 2)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const thirdTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 4 * 3)
+    .attr('y2', yStart - max / 4 * 3)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const fourthTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart - max)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(high / 100).toFixed(2)}`)
+
+  const fourthTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max)
+    .attr('y2', yStart - max)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const title = svg
+    .append('text')
+    .attr('x', xStart + barWidth * data.length / 3)
+    .attr('y', yStart - max - 40)
+    .attr('font-family', 'sans-serif')
+    .text(`${viewMode}`)
+
+  const rect = svg.selectAll('rect')
+
+  rect
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('width', (d, i) => d.width)
+    .attr('height', (d, i) => d.height)
+    .attr('fill', (d, i) => d.fill)
+    .attr('x', (d, i) => xStart + i * (d.width + barPadding))
+    .attr('y', (d, i) => yStart - d.height)
+}
+
+module.exports = {
+  DateExcel2JavaScript,
+  SeedSheetLoader,
+  OrderRequestToExcel,
+  UpdateInventoryThroughExcel,
+  NumberWithCommas,
+  Graphify
+}

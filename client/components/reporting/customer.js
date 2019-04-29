@@ -5,6 +5,7 @@ import {
   getAllCustomersThunk
 } from '../../store/orders'
 import {getAllCategoriesThunk} from '../../store/inventory'
+import {NumberWithCommas} from '../../../utilities'
 
 class CustomerAccountsReporting extends Component {
   constructor() {
@@ -74,10 +75,10 @@ class CustomerAccountsReporting extends Component {
                 <td>{prod.ProductID}</td>
                 <td>{prod.ProductName}</td>
                 <td>{categories[prod.CategoryID - 1].CategoryName}</td>
-                <td>{prod.orderdetail.Quantity}</td>
-                <td>${(prod.orderdetail.UnitPrice/100).toFixed(2)}</td>
-                <td>${(prod.orderdetail.ProductCost/100).toFixed(2)}</td>
-                <td>${(prod.orderdetail.ProductRevenue/100).toFixed(2)}</td>
+                <td>{NumberWithCommas(prod.orderdetail.Quantity)}</td>
+                <td>${NumberWithCommas((prod.orderdetail.UnitPrice/100).toFixed(2))}</td>
+                <td>${NumberWithCommas((prod.orderdetail.ProductCost/100).toFixed(2))}</td>
+                <td>${NumberWithCommas((prod.orderdetail.ProductRevenue/100).toFixed(2))}</td>
               </tr>
             ))}
 

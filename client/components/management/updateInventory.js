@@ -137,6 +137,8 @@ class UpdateInventory extends Component {
             )}
           </div>
 
+          <div/>
+
           <div className="OptionComponent">
             {initProducts.length === 0 ? (
               <div className="SubmitOrder Disabled">Update Inventory</div>
@@ -149,6 +151,15 @@ class UpdateInventory extends Component {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="Instructions">
+        <div id="InstHeading">Instructions:</div>
+        <div/>
+              <div>Set Checkpoint - It sets the current inventory as a base view</div>
+              <div>Open the UpdateInventory.xlsx and input your inventory changes</div>
+              <div>Run "npm run update" into the Node terminal </div>
+              <div>Press "Update Inventory" </div>
         </div>
 
         <table>

@@ -211,6 +211,17 @@ select {
   background-color: rgba(202, 202, 186, 0.605);
   border: ridge 3px white; }
 
+.Instructions {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: ridge white 2px;
+  margin-top: 20px; }
+
+#InstHeading {
+  font-weight: bolder;
+  margin-bottom: 20px; }
+
 body {
   font-family: sans-serif;
   margin-left: 198px; }

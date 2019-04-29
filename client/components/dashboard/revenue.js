@@ -23,7 +23,7 @@ class RevenueDashboard extends Component {
         'green',
         'blue'
       ],
-      viewMode: "Select an Account",
+      viewMode: 'Select an Account',
       activated: false,
       CustomerRevenue: 0,
       CustomerExpenses: 0,
@@ -73,8 +73,6 @@ class RevenueDashboard extends Component {
     ]
 
     await products.forEach(prod => {
-      console.log(viewMode)
-      console.log(Number(prod.orderdetail[viewMode]))
       data[prod.CategoryID - 1].height =
         Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
       if (data[prod.CategoryID - 1].height > high) {
@@ -136,6 +134,10 @@ class RevenueDashboard extends Component {
           <th>Value</th>
         </tr>
         <tr>
+          <td>Client</td>
+          <td>{this.state.currentCustomer}</td>
+        </tr>
+        <tr>
           <td>Purchases</td>
           <td>{NumberWithCommas(Demand)}</td>
         </tr>
@@ -149,7 +151,11 @@ class RevenueDashboard extends Component {
         </tr>
         <tr>
           <td>Gross Profit</td>
-          <td>${NumberWithCommas(((CustomerRevenue - CustomerExpenses) / 100).toFixed(2))}</td>
+          <td>
+            ${NumberWithCommas(
+              ((CustomerRevenue - CustomerExpenses) / 100).toFixed(2)
+            )}
+          </td>
         </tr>
         <tr>
           <td>Efficiency Ratio</td>
@@ -161,45 +167,46 @@ class RevenueDashboard extends Component {
     return (
       <div className="Container">
         <div className="ReportingOptions">
-          <div className="OptionComponent">
-            <div>Client: </div>
-            <select name="customers" size="1" onChange={this.customerHandler}>
-              {customers.map(cust => (
-                <option key={cust.CustomerID} value={cust.CustomerID}>
-                  {cust.CompanyName} ({cust.CustomerID})
-                </option>
-              ))}
-            </select>
-          </div>
+          {!activated ? (
+            <div className="OptionComponent">
+              <div>Client: </div>
+              <select name="customers" size="1" onChange={this.customerHandler}>
+                {customers.map(cust => (
+                  <option key={cust.CustomerID} value={cust.CustomerID}>
+                    {cust.CompanyName} ({cust.CustomerID})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          {!activated ? (
+            <div className="OptionComponent">
+              <div>Account: </div>
+              <select
+                name="graphOption"
+                size="1"
+                onChange={this.viewModeHandler}
+              >
+                <option value="Select an Account">Select an Account</option>
+                <option value="ProductRevenue">Revenue</option>
+                <option value="ProductCost">Expenses</option>
+              </select>
+            </div>
+          ) : null}
 
           <div className="OptionComponent">
-            <div>Account: </div>
-            <select
-              name="graphOption"
-              size="1"
-              onChange = {this.viewModeHandler}
-            >
-              <option value="Select an Account">Select an Account</option>
-              <option value="ProductRevenue">Revenue</option>
-              <option value="ProductCost">Expenses</option>
-            </select>
-          </div>
-
-          <div className="OptionComponent">
-
-            {activated ?
+            {activated ? (
               <div className="SubmitOrder" onClick={this.deactivateGraph}>
-                  Deactivate Financials
-              </div> :
-              (viewMode !== "Select an Account") ?
+                Deactivate Financials
+              </div>
+            ) : viewMode !== 'Select an Account' ? (
               <div className="SubmitOrder Ready" onClick={this.activateGraph}>
                 Activate Financials
-              </div> :
-              <div className="SubmitOrder False">
-                Select an Account
               </div>
-            }
-
+            ) : (
+              <div className="SubmitOrder False">Select an Account</div>
+            )}
           </div>
         </div>
 

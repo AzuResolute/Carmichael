@@ -2,6 +2,8 @@ Carmichael Inventory Management System
 
 By Roger Lester Palabasan
 
+---
+
 What is the Carmichael?
 
 Carmichael is a software that manages inventory and reporting through both Microsoft Excel and the web app itself.

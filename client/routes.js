@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import {Login, Signup, UserHome, InventoryReporting, OrderReporting, OrderRequest, UpdateInventory} from './components'
+import {Login, Signup, UserHome, InventoryReporting, OrderReporting, OrderRequest,CustomerAccountsReporting, UpdateInventory, RevenueDashboard} from './components'
 import {me} from './store'
 
 /**
@@ -23,8 +23,10 @@ class Routes extends Component {
         <Route path="/signup" component={Signup} />
         <Route exact path="/reporting/inventory" component={InventoryReporting} />
         <Route exact path="/reporting/orders" component={OrderReporting} />
+        <Route exact path="/reporting/customer" component={CustomerAccountsReporting} />
         <Route exact path="/management/orderrequest" component={OrderRequest} />
         <Route exact path="/management/updateinventory" component={UpdateInventory} />
+        <Route exact path="/dashboard/revenue" component={RevenueDashboard} />
         <Route path="/" component={UserHome} />
       </Switch>
     )

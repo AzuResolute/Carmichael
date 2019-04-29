@@ -87,4 +87,20 @@ router.get('/:sortBy/:sortOrder/:CustomerID', async (request, response, next) =>
   }
 })
 
+router.get('/incProducts/:sortBy/:sortOrder/:CustomerID', async (request, response, next) => {
+  try {
+    let {sortBy,sortOrder, CustomerID} = request.params
+    let allOrders = await Order.findAll({
+      where: {
+        CustomerID
+      },
+      order: [[sortBy, sortOrder]],
+      include: [{model: Product}]
+    })
+    response.json(allOrders)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 module.exports = router

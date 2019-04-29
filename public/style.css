@@ -207,6 +207,10 @@ select {
 .RemoveButton {
   background-color: slateblue; }
 
+.canva {
+  background-color: rgba(202, 202, 186, 0.605);
+  border: ridge 3px white; }
+
 body {
   font-family: sans-serif;
   margin-left: 198px; }

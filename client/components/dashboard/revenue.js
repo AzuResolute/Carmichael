@@ -5,7 +5,7 @@ import {
   getAllCustomersThunk
 } from '../../store/orders'
 import {getAllCategoriesThunk} from '../../store/inventory'
-import {Graphify, NumberWithCommas} from '../../../utilities/'
+import {BarGraphify, NumberWithCommas} from '../../../utilities/'
 import * as d3 from 'd3'
 
 class RevenueDashboard extends Component {
@@ -23,7 +23,7 @@ class RevenueDashboard extends Component {
         'green',
         'blue'
       ],
-      viewMode: 'ProductRevenue',
+      viewMode: "Select an Account",
       activated: false,
       CustomerRevenue: 0,
       CustomerExpenses: 0,
@@ -44,11 +44,11 @@ class RevenueDashboard extends Component {
     this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomer)
   }
 
-  // viewModeHandler = evt => {
-  //   this.setState({
-  //     viewMode: evt.target.value
-  //   })
-  // }
+  viewModeHandler = evt => {
+    this.setState({
+      viewMode: evt.target.value
+    })
+  }
 
   activateGraph = async () => {
     const {products} = this.props
@@ -73,6 +73,8 @@ class RevenueDashboard extends Component {
     ]
 
     await products.forEach(prod => {
+      console.log(viewMode)
+      console.log(Number(prod.orderdetail[viewMode]))
       data[prod.CategoryID - 1].height =
         Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
       if (data[prod.CategoryID - 1].height > high) {
@@ -104,7 +106,7 @@ class RevenueDashboard extends Component {
       .attr('width', 600)
       .attr('height', 600)
 
-    await Graphify(svg, data, high, viewMode)
+    await BarGraphify(svg, data, high, viewMode)
   }
 
   deactivateGraph = () => {
@@ -115,6 +117,7 @@ class RevenueDashboard extends Component {
 
   render() {
     let {customers, orders, categories} = this.props
+    let {viewMode} = this.state
     let {
       colors,
       activated,
@@ -141,7 +144,7 @@ class RevenueDashboard extends Component {
           <td>${NumberWithCommas((CustomerRevenue / 100).toFixed(2))}</td>
         </tr>
         <tr>
-          <td>Total Expenses</td>
+          <td>Total Costs</td>
           <td>${NumberWithCommas((CustomerExpenses / 100).toFixed(2))}</td>
         </tr>
         <tr>
@@ -169,30 +172,34 @@ class RevenueDashboard extends Component {
             </select>
           </div>
 
-          {/* <div className="OptionComponent">
-            <div>Customers: </div>
+          <div className="OptionComponent">
+            <div>Account: </div>
             <select
               name="graphOption"
               size="1"
-              onClick = {this.viewModeHandler}
+              onChange = {this.viewModeHandler}
             >
-              <option value="ProductRevenue" selected>Revenue</option>
-              <option value="ProductExpenses">Expenses</option>
+              <option value="Select an Account">Select an Account</option>
+              <option value="ProductRevenue">Revenue</option>
+              <option value="ProductCost">Expenses</option>
             </select>
-          </div> */}
+          </div>
 
           <div className="OptionComponent">
-            {!activated ? (
-              <div className="SubmitOrder Ready" onClick={this.activateGraph}>
-                {' '}
-                Activate Financials{' '}
-              </div>
-            ) : (
+
+            {activated ?
               <div className="SubmitOrder" onClick={this.deactivateGraph}>
-                {' '}
-                Deactivate Financials{' '}
+                  Deactivate Financials
+              </div> :
+              (viewMode !== "Select an Account") ?
+              <div className="SubmitOrder Ready" onClick={this.activateGraph}>
+                Activate Financials
+              </div> :
+              <div className="SubmitOrder False">
+                Select an Account
               </div>
-            )}
+            }
+
           </div>
         </div>
 

@@ -295,7 +295,7 @@ class OrderReceived extends Component {
                         (prod.ProductRevenue / 100).toFixed(2)
                       )}
                     </td>
-                    <td value={i} onClick={this.removeFromCart}>
+                    <td value={i}>
                       <button
                         type="button"
                         value={i}

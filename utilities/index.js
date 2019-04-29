@@ -168,7 +168,7 @@ const NumberWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-const Graphify = async (svg, data, high, viewMode) => {
+const BarGraphify = async (svg, data, high, viewMode) => {
   const max = 400
   const barWidth = 40
   const barPadding = 5
@@ -286,11 +286,129 @@ const Graphify = async (svg, data, high, viewMode) => {
     .attr('y', (d, i) => yStart - d.height)
 }
 
+const LineGraphify = async (svg, data, high, viewMode) => {
+  const max = 400
+  const lineWidth = 40
+  const minimum = 1
+  const xStart = 160
+  const yStart = 500
+
+  const xaxisline = svg
+    .append('line')
+    .attr('y1', yStart + 1)
+    .attr('y2', yStart + 1)
+    .attr('x1', xStart - 20)
+    .attr(
+      'x2',
+      xStart + lineWidth * data.length + barPadding * (data.length - 1) + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'black')
+
+  const yaxisline = svg
+    .append('line')
+    .attr('y1', yStart + 1)
+    .attr('y2', yStart - max)
+    .attr('x1', xStart - 20)
+    .attr('x2', xStart - 20)
+    .attr('stroke-width', 2)
+    .attr('stroke', 'black')
+
+  const baseTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart + 1)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(minimum / 100).toFixed(2)}`)
+
+  const firstTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 4)
+    .attr('y2', yStart - max / 4)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + lineWidth * data.length + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const secondTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart - max / 2)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(high / 100 / 2).toFixed(2)}`)
+
+  const secondTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 2)
+    .attr('y2', yStart - max / 2)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + lineWidth * data.length + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const thirdTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max / 4 * 3)
+    .attr('y2', yStart - max / 4 * 3)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + lineWidth * data.length + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const fourthTier = svg
+    .append('text')
+    .attr('x', xStart - 100)
+    .attr('y', yStart - max)
+    .attr('font-family', 'sans-serif')
+    .text(`$${Math.floor(high / 100).toFixed(2)}`)
+
+  const fourthTierLine = svg
+    .append('line')
+    .attr('y1', yStart - max)
+    .attr('y2', yStart - max)
+    .attr('x1', xStart - 19)
+    .attr(
+      'x2',
+      xStart + lineWidth * data.length  + 20
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+
+  const title = svg
+    .append('text')
+    .attr('x', xStart + lineWidth * data.length / 3)
+    .attr('y', yStart - max - 40)
+    .attr('font-family', 'sans-serif')
+    .text(`${viewMode}`)
+
+  const line = svg.selectAll('line')
+
+  line
+    .data(data)
+    .enter()
+    .append('line')
+    // .attr('width', (d, i) => d.width)
+    // .attr('height', (d, i) => d.height)
+    // .attr('fill', (d, i) => d.fill)
+    .attr('x', (d, i) => xStart + i * d.width)
+    .attr('y', (d, i) => yStart - d.height)
+}
+
 module.exports = {
   DateExcel2JavaScript,
   SeedSheetLoader,
   OrderRequestToExcel,
   UpdateInventoryThroughExcel,
   NumberWithCommas,
-  Graphify
+  BarGraphify,
+  LineGraphify
 }

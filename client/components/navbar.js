@@ -30,7 +30,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
             <div className = "NavSegment">Dashboard: </div>
             {/* <Link to="/">Overview</Link> */}
             <Link to="/dashboard/revenue">Revenue</Link>
-            {/* <Link to="/">Expenses</Link> */}
+            <Link to="/dashboard/assets">Assets</Link>
           </div>
 
           <div>

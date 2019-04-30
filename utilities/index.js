@@ -202,7 +202,7 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .attr('x', xStart - 100)
     .attr('y', yStart + 1)
     .attr('font-family', 'sans-serif')
-    .text(`$${Math.floor(minimum / 100).toFixed(2)}`)
+    .text(`$${NumberWithCommas(Math.floor(minimum / 100).toFixed(2))}`)
 
   const firstTierLine = svg
     .append('line')
@@ -221,7 +221,7 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .attr('x', xStart - 100)
     .attr('y', yStart - max / 2)
     .attr('font-family', 'sans-serif')
-    .text(`$${Math.floor(high / 100 / 2).toFixed(2)}`)
+    .text(`$${NumberWithCommas(Math.floor(high / 100 / 2).toFixed(2))}`)
 
   const secondTierLine = svg
     .append('line')
@@ -252,7 +252,7 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .attr('x', xStart - 100)
     .attr('y', yStart - max)
     .attr('font-family', 'sans-serif')
-    .text(`$${Math.floor(high / 100).toFixed(2)}`)
+    .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
 
   const fourthTierLine = svg
     .append('line')

@@ -168,22 +168,22 @@ const NumberWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-const BarGraphify = async (svg, data, high, viewMode) => {
-  const max = 400
-  const barWidth = 40
-  const barPadding = 5
+const BarGraphify = async (svg, data, dimensions, max, high, margin, viewMode) => {
   const minimum = 1
-  const xStart = 160
-  const yStart = 500
+  const axisLabelSpace = 60
+  const barPadding = 5
+  const barWidth = (dimensions - (margin * 2) - axisLabelSpace)/data.length - barPadding
+  const xStart = margin + axisLabelSpace
+  const yStart = dimensions - margin
 
   const xaxisline = svg
     .append('line')
     .attr('y1', yStart + 1)
     .attr('y2', yStart + 1)
-    .attr('x1', xStart - 20)
+    .attr('x1', xStart - barPadding)
     .attr(
       'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+      dimensions - margin
     )
     .attr('stroke-width', 2)
     .attr('stroke', 'black')
@@ -192,14 +192,14 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .append('line')
     .attr('y1', yStart + 1)
     .attr('y2', yStart - max)
-    .attr('x1', xStart - 20)
-    .attr('x2', xStart - 20)
+    .attr('x1', xStart - barPadding)
+    .attr('x2', xStart - barPadding)
     .attr('stroke-width', 2)
     .attr('stroke', 'black')
 
   const baseTier = svg
     .append('text')
-    .attr('x', xStart - 100)
+    .attr('x', xStart - margin)
     .attr('y', yStart + 1)
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(minimum / 100).toFixed(2))}`)
@@ -208,17 +208,17 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .append('line')
     .attr('y1', yStart - max / 4)
     .attr('y2', yStart - max / 4)
-    .attr('x1', xStart - 19)
+    .attr('x1', xStart - barPadding + 1)
     .attr(
       'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
     )
     .attr('stroke-width', 2)
     .attr('stroke', 'gray')
 
   const secondTier = svg
     .append('text')
-    .attr('x', xStart - 100)
+    .attr('x', xStart - margin)
     .attr('y', yStart - max / 2)
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(high / 100 / 2).toFixed(2))}`)
@@ -227,10 +227,10 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .append('line')
     .attr('y1', yStart - max / 2)
     .attr('y2', yStart - max / 2)
-    .attr('x1', xStart - 19)
+    .attr('x1', xStart - barPadding + 1)
     .attr(
       'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
     )
     .attr('stroke-width', 2)
     .attr('stroke', 'gray')
@@ -239,17 +239,17 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .append('line')
     .attr('y1', yStart - max / 4 * 3)
     .attr('y2', yStart - max / 4 * 3)
-    .attr('x1', xStart - 19)
+    .attr('x1', xStart - barPadding + 1)
     .attr(
       'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
     )
     .attr('stroke-width', 2)
     .attr('stroke', 'gray')
 
   const fourthTier = svg
     .append('text')
-    .attr('x', xStart - 100)
+    .attr('x', xStart - margin)
     .attr('y', yStart - max)
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
@@ -258,10 +258,10 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .append('line')
     .attr('y1', yStart - max)
     .attr('y2', yStart - max)
-    .attr('x1', xStart - 19)
+    .attr('x1', xStart - barPadding + 1)
     .attr(
       'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + 20
+      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
     )
     .attr('stroke-width', 2)
     .attr('stroke', 'gray')
@@ -279,10 +279,10 @@ const BarGraphify = async (svg, data, high, viewMode) => {
     .data(data)
     .enter()
     .append('rect')
-    .attr('width', (d, i) => d.width)
+    .attr('width', (d, i) => barWidth)
     .attr('height', (d, i) => d.height)
     .attr('fill', (d, i) => d.fill)
-    .attr('x', (d, i) => xStart + i * (d.width + barPadding))
+    .attr('x', (d, i) => xStart + i * (barWidth + barPadding))
     .attr('y', (d, i) => yStart - d.height)
 }
 

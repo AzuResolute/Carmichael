@@ -1,147 +1,253 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {
-  getAllProductsThunk,
-  getProductsByCategoryThunk,
-  getAllCategoriesThunk
-} from '../../store/inventory'
+  getProductsFromOrdersByCustomerThunk,
+  getAllCustomersThunk
+} from '../../store/orders'
+import {getAllCategoriesThunk} from '../../store/inventory'
+import {BarGraphify, NumberWithCommas} from '../../../utilities/'
+import * as d3 from 'd3'
 
 class AssetsDashboard extends Component {
   constructor() {
     super()
     this.state = {
-      currentCategory: 'All Categories',
-      currentSortBy: 'ProductID',
-      currentSortOrder: 'ASC'
+      currentCustomer: 'ALFKI',
+      colors: [
+        'white',
+        'violet',
+        'red',
+        'orange',
+        'aquamarine',
+        'yellow',
+        'green',
+        'blue'
+      ],
+      viewMode: 'Select an Account',
+      activated: false,
+      CustomerRevenue: 0,
+      CustomerExpenses: 0,
+      Demand: 0
     }
   }
 
   async componentDidMount() {
     await this.props.onLoadCategories()
-    await this.props.onLoadProducts(
-      this.state.currentSortBy,
-      this.state.currentSortOrder,
-      this.state.currentCategory
-    )
+    await this.props.onLoadCustomers()
+    await this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomer)
   }
 
-  categoryHandler = async evt => {
+  customerHandler = async evt => {
     await this.setState({
-      currentCategory: evt.target.value
+      currentCustomer: evt.target.value
     })
-    this.props.onLoadProducts(
-      this.state.currentSortBy,
-      this.state.currentSortOrder,
-      this.state.currentCategory
-    )
+    this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomer)
   }
 
-  sortbyHandler = async evt => {
-    await this.setState({
-      currentSortBy: evt.target.value
+  viewModeHandler = evt => {
+    this.setState({
+      viewMode: evt.target.value
     })
-    this.props.onLoadProducts(
-      this.state.currentSortBy,
-      this.state.currentSortOrder,
-      this.state.currentCategory
-    )
   }
 
-  sortorderHandler = async evt => {
-    await this.setState({
-      currentSortOrder: evt.target.value
+  activateGraph = async () => {
+    const {products} = this.props
+    const {viewMode} = this.state
+    const max = 400
+    const barWidth = 40
+    const minimum = 1
+    let CustomerRevenue = 0
+    let CustomerExpenses = 0
+    let Demand = 0
+    let high = minimum
+
+    const data = [
+      {width: barWidth, height: minimum, text: 'Summer 2017'},
+      {width: barWidth, height: minimum, text: 'Fall 2017'},
+      {width: barWidth, height: minimum, text: 'Winter 2018'},
+      {width: barWidth, height: minimum, text: 'Spring 2018'},
+      {width: barWidth, height: minimum, text: 'Summer 2018'},
+      {width: barWidth, height: minimum, text: 'Fall 2018'},
+      {width: barWidth, height: minimum, text: 'Winter 2019'},
+      {width: barWidth, height: minimum, text: 'Spring 2019'}
+    ]
+
+    await products.forEach(prod => {
+      data[prod.CategoryID - 1].height =
+        Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
+      if (data[prod.CategoryID - 1].height > high) {
+        high = data[prod.CategoryID - 1].height
+      }
+
+      CustomerRevenue =
+        Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
+      CustomerExpenses += Number(prod.orderdetail.ProductCost)
+      Demand += Number(prod.orderdetail.Quantity)
     })
-    this.props.onLoadProducts(
-      this.state.currentSortBy,
-      this.state.currentSortOrder,
-      this.state.currentCategory
-    )
+
+    if (high > max) {
+      data.map(elem => {
+        elem.height = Math.max(elem.height * (max / high), minimum)
+      })
+    }
+
+    await this.setState({
+      activated: true,
+      CustomerRevenue,
+      CustomerExpenses,
+      Demand
+    })
+
+    const canvas = d3.select('.canva')
+    const svg = canvas
+      .append('svg')
+      .attr('width', 600)
+      .attr('height', 600)
+
+    await BarGraphify(svg, data, high, viewMode)
+  }
+
+  deactivateGraph = () => {
+    this.setState({
+      activated: false
+    })
   }
 
   render() {
-    let {categories, products} = this.props
-    let productProps = [
-      'ProductID',
-      'ProductName',
-      'Category',
-      'QuantityPerUnit',
-      'UnitPrice',
-      'UnitsInStock',
-      'Obselete'
-    ]
-    if (!products || !categories) {
+    let {customers, orders, categories} = this.props
+    let {viewMode} = this.state
+    let {
+      colors,
+      activated,
+      CustomerRevenue,
+      CustomerExpenses,
+      Demand
+    } = this.state
+    if (!orders) {
       return <div> Loading ... </div>
     }
+
+    const Financials = () => (
+      <table>
+        <tr>
+          <th>Description</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Client</td>
+          <td>{this.state.currentCustomer}</td>
+        </tr>
+        <tr>
+          <td>Purchases</td>
+          <td>{NumberWithCommas(Demand)}</td>
+        </tr>
+        <tr>
+          <td>Total Revenue</td>
+          <td>${NumberWithCommas((CustomerRevenue / 100).toFixed(2))}</td>
+        </tr>
+        <tr>
+          <td>Total Costs</td>
+          <td>${NumberWithCommas((CustomerExpenses / 100).toFixed(2))}</td>
+        </tr>
+        <tr>
+          <td>Gross Profit</td>
+          <td>
+            ${NumberWithCommas(
+              ((CustomerRevenue - CustomerExpenses) / 100).toFixed(2)
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Efficiency Ratio</td>
+          <td>{(CustomerExpenses / CustomerRevenue).toFixed(4)}</td>
+        </tr>
+      </table>
+    )
+
     return (
       <div className="Container">
         <div className="ReportingOptions">
-          <div className="OptionComponent">
-            <div>Category: </div>
-            <select name="categories" size="1" onChange={this.categoryHandler}>
-              <option value="All Categories">All Categories</option>
-              {categories.map(cat => (
-                <option key={cat.CategoryID} value={cat.CategoryID}>
-                  {cat.CategoryName}
-                </option>
-              ))}
-            </select>
-          </div>
+          {!activated ? (
+            <div className="OptionComponent">
+              <div>Client: </div>
+              <select name="customers" size="1" onChange={this.customerHandler}>
+                {customers.map(cust => (
+                  <option key={cust.CustomerID} value={cust.CustomerID}>
+                    {cust.CompanyName} ({cust.CustomerID})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          {!activated ? (
+            <div className="OptionComponent">
+              <div>Account: </div>
+              <select
+                name="graphOption"
+                size="1"
+                onChange={this.viewModeHandler}
+              >
+                <option value="Select an Account">Select an Account</option>
+                <option value="ProductRevenue">Revenue</option>
+                <option value="ProductCost">Expenses</option>
+              </select>
+            </div>
+          ) : null}
 
           <div className="OptionComponent">
-            <div>Sort By: </div>
-            <select name="sortBy" size="1" onChange={this.sortbyHandler}>
-              {productProps.map(prop => (
-                <option key value={prop}>
-                  {prop}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="OptionComponent">
-            <div>Sort Order: </div>
-            <select name="sortOrder" size="1" onChange={this.sortorderHandler}>
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
-            </select>
+            {activated ? (
+              <div className="SubmitOrder" onClick={this.deactivateGraph}>
+                Deactivate Financials
+              </div>
+            ) : viewMode !== 'Select an Account' ? (
+              <div className="SubmitOrder Ready" onClick={this.activateGraph}>
+                Activate Financials
+              </div>
+            ) : (
+              <div className="SubmitOrder False">Select an Account</div>
+            )}
           </div>
         </div>
 
-        <table>
-          <tr>{productProps.map(key => <th key>{key}</th>)}</tr>
-
-          {products.map(prod => (
-            <tr key={prod.ProductID}>
-              <td>{prod.ProductID}</td>
-              <td>{prod.ProductName}</td>
-              <td>{categories[prod.CategoryID - 1].CategoryName}</td>
-              <td>{prod.QuantityPerUnit}</td>
-              <td>${(prod.UnitPrice / 100).toFixed(2)}</td>
-              <td>{prod.UnitsInStock}</td>
-              <td>{prod.Discontinued ? "Yes" : "No"}</td>
-            </tr>
-          ))}
-        </table>
+        {activated ? (
+          <div className="ReportingOptions">
+            <div className="Legend">
+              <table>
+                {categories.map((cat, i) => (
+                  <tr key={cat.CategoryID}>
+                    <td style={{backgroundColor: colors[i]}}>
+                      {cat.CategoryName}
+                    </td>
+                  </tr>
+                ))}
+              </table>
+            </div>
+            <div className="canva" />
+            {Financials()}
+          </div>
+        ) : null}
       </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  products: state.inventory.products,
-  categories: state.inventory.categories
+  categories: state.inventory.categories,
+  orders: state.orders.orders,
+  customers: state.orders.customers,
+  products: state.orders.productsFromOrders
 })
 
 const mapDispatchToProps = dispatch => ({
-  onLoadProducts: (sortBy, sortOrder, id) => {
-    if (id === 'All Categories') {
-      dispatch(getAllProductsThunk(sortBy, sortOrder))
-    } else {
-      dispatch(getProductsByCategoryThunk(sortBy, sortOrder, id))
-    }
-  },
   onLoadCategories: () => {
     dispatch(getAllCategoriesThunk())
+  },
+  onLoadOrders: (sortBy, sortOrder, id) => {
+    dispatch(getProductsFromOrdersByCustomerThunk(sortBy, sortOrder, id))
+  },
+  onLoadCustomers: () => {
+    dispatch(getAllCustomersThunk())
   }
 })
 

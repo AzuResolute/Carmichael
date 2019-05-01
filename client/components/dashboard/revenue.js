@@ -53,8 +53,9 @@ class RevenueDashboard extends Component {
   activateGraph = async () => {
     const {products} = this.props
     const {viewMode} = this.state
+    const dimensions = 600
+    const margin = 100
     const max = 400
-    const barWidth = 40
     const minimum = 1
     let CustomerRevenue = 0
     let CustomerExpenses = 0
@@ -62,14 +63,14 @@ class RevenueDashboard extends Component {
     let high = minimum
 
     const data = [
-      {width: barWidth, height: minimum, fill: 'white'},
-      {width: barWidth, height: minimum, fill: 'violet'},
-      {width: barWidth, height: minimum, fill: 'red'},
-      {width: barWidth, height: minimum, fill: 'orange'},
-      {width: barWidth, height: minimum, fill: 'aquamarine'},
-      {width: barWidth, height: minimum, fill: 'yellow'},
-      {width: barWidth, height: minimum, fill: 'green'},
-      {width: barWidth, height: minimum, fill: 'blue'}
+      {height: minimum, fill: 'white'},
+      {height: minimum, fill: 'violet'},
+      {height: minimum, fill: 'red'},
+      {height: minimum, fill: 'orange'},
+      {height: minimum, fill: 'aquamarine'},
+      {height: minimum, fill: 'yellow'},
+      {height: minimum, fill: 'green'},
+      {height: minimum, fill: 'blue'}
     ]
 
     await products.forEach(prod => {
@@ -101,10 +102,10 @@ class RevenueDashboard extends Component {
     const canvas = d3.select('.canva')
     const svg = canvas
       .append('svg')
-      .attr('width', 600)
-      .attr('height', 600)
+      .attr('width', dimensions)
+      .attr('height', dimensions)
 
-    await BarGraphify(svg, data, high, viewMode)
+    await BarGraphify(svg, data, dimensions, max, high, margin, viewMode)
   }
 
   deactivateGraph = () => {

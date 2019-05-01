@@ -53,14 +53,10 @@ class RevenueDashboard extends Component {
   activateGraph = async () => {
     const {products} = this.props
     const {viewMode} = this.state
-    const dimensions = 600
-    const margin = 100
-    const max = 400
     const minimum = 1
     let CustomerRevenue = 0
     let CustomerExpenses = 0
     let Demand = 0
-    let high = minimum
 
     const data = [
       {height: minimum, fill: 'white'},
@@ -76,21 +72,12 @@ class RevenueDashboard extends Component {
     await products.forEach(prod => {
       data[prod.CategoryID - 1].height =
         Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
-      if (data[prod.CategoryID - 1].height > high) {
-        high = data[prod.CategoryID - 1].height
-      }
 
       CustomerRevenue =
         Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
       CustomerExpenses += Number(prod.orderdetail.ProductCost)
       Demand += Number(prod.orderdetail.Quantity)
     })
-
-    if (high > max) {
-      data.map(elem => {
-        elem.height = Math.max(elem.height * (max / high), minimum)
-      })
-    }
 
     await this.setState({
       activated: true,
@@ -100,12 +87,9 @@ class RevenueDashboard extends Component {
     })
 
     const canvas = d3.select('.canva')
-    const svg = canvas
-      .append('svg')
-      .attr('width', dimensions)
-      .attr('height', dimensions)
 
-    await BarGraphify(svg, data, dimensions, max, high, margin, viewMode)
+    // BarGraphify(canvas, data, dimensions, margin, viewMode)
+    await BarGraphify(canvas, data, 600, 100, viewMode)
   }
 
   deactivateGraph = () => {

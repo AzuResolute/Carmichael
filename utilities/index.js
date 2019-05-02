@@ -168,7 +168,7 @@ const NumberWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
+const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, viewMode) => {
   const minimum = 1
   const axisLabelSpace = 60
   const barPadding = 4
@@ -177,6 +177,7 @@ const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
   const xStart = margin + axisLabelSpace
   const yStart = dimensions - margin
   let high = 0
+  let xAxisValues = []
 
   data.forEach(elem => {
     if (elem.height > high) {
@@ -184,11 +185,13 @@ const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
     }
   })
 
-  if (high > max) {
-    data.map(elem => {
-      elem.height = Math.max(elem.height * (max / high), minimum)
-    })
+  for (let i = 1; i <= axisIntervals; i++) {
+    xAxisValues.push(high * (i / axisIntervals))
   }
+
+  const scaling = d3.scaleLinear()
+                    .domain([0, high])
+                    .range([1, max])
 
   const svg = canvas
     .append('svg')
@@ -223,18 +226,6 @@ const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(minimum / 100).toFixed(2))}`)
 
-  const firstTierLine = svg
-    .append('line')
-    .attr('y1', yStart - max / 4)
-    .attr('y2', yStart - max / 4)
-    .attr('x1', xStart - barPadding + 1)
-    .attr(
-      'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
-    )
-    .attr('stroke-width', 2)
-    .attr('stroke', 'gray')
-
   const secondTier = svg
     .append('text')
     .attr('x', xStart - margin)
@@ -242,48 +233,12 @@ const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(high / 100 / 2).toFixed(2))}`)
 
-  const secondTierLine = svg
-    .append('line')
-    .attr('y1', yStart - max / 2)
-    .attr('y2', yStart - max / 2)
-    .attr('x1', xStart - barPadding + 1)
-    .attr(
-      'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
-    )
-    .attr('stroke-width', 2)
-    .attr('stroke', 'gray')
-
-  const thirdTierLine = svg
-    .append('line')
-    .attr('y1', yStart - max / 4 * 3)
-    .attr('y2', yStart - max / 4 * 3)
-    .attr('x1', xStart - barPadding + 1)
-    .attr(
-      'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
-    )
-    .attr('stroke-width', 2)
-    .attr('stroke', 'gray')
-
   const fourthTier = svg
     .append('text')
     .attr('x', xStart - margin)
     .attr('y', yStart - max)
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
-
-  const fourthTierLine = svg
-    .append('line')
-    .attr('y1', yStart - max)
-    .attr('y2', yStart - max)
-    .attr('x1', xStart - barPadding + 1)
-    .attr(
-      'x2',
-      xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
-    )
-    .attr('stroke-width', 2)
-    .attr('stroke', 'gray')
 
   const title = svg
     .append('text')
@@ -293,16 +248,52 @@ const BarGraphify = async (canvas, data, dimensions, margin, viewMode) => {
     .text(`${viewMode}`)
 
   const rect = svg.selectAll('rect')
+  const line = svg.selectAll("line.xaxis")
+
+  line
+      .data(xAxisValues)
+      .enter()
+      .append('line')
+      .attr('y1', (d, i) => {
+        return yStart - (max / axisIntervals) * (i + 1)
+      })
+      .attr('y2', (d, i) => {
+        return yStart - (max / axisIntervals) * (i + 1)
+      })
+      .attr('x1', xStart - barPadding + 1)
+      .attr(
+        'x2',
+        xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
+      )
+      .attr('stroke-width', 2)
+      .attr('stroke', 'gray')
+      .classed("xaxis")
+
+  // text
+  //     .data(xAxisValues)
+  //     .enter()
+  //     .append('text')
+  //     .attr('x', xStart - margin)
+  //     .attr('y', (d, i) => xStart - max * (i / axisIntervals))
+  //     .attr('font-family', 'sans-serif')
+  //     .text((d, i) => d)
+
+  // const fourthTier = svg
+  //   .append('text')
+  //   .attr('x', xStart - margin)
+  //   .attr('y', yStart - max * 2 / 4)
+  //   .attr('font-family', 'sans-serif')
+  //   .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
 
   rect
     .data(data)
     .enter()
     .append('rect')
     .attr('width', (d, i) => barWidth)
-    .attr('height', (d, i) => d.height)
+    .attr('height', (d, i) => scaling(d.height))
     .attr('fill', (d, i) => d.fill)
     .attr('x', (d, i) => xStart + i * (barWidth + barPadding))
-    .attr('y', (d, i) => yStart - d.height)
+    .attr('y', (d, i) => yStart - scaling(d.height))
 
 }
 

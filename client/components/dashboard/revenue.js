@@ -53,20 +53,19 @@ class RevenueDashboard extends Component {
   activateGraph = async () => {
     const {products} = this.props
     const {viewMode} = this.state
-    const minimum = 1
     let CustomerRevenue = 0
     let CustomerExpenses = 0
     let Demand = 0
 
     const data = [
-      {height: minimum, fill: 'white'},
-      {height: minimum, fill: 'violet'},
-      {height: minimum, fill: 'red'},
-      {height: minimum, fill: 'orange'},
-      {height: minimum, fill: 'aquamarine'},
-      {height: minimum, fill: 'yellow'},
-      {height: minimum, fill: 'green'},
-      {height: minimum, fill: 'blue'}
+      {height: 0, fill: 'white'},
+      {height: 0, fill: 'violet'},
+      {height: 0, fill: 'red'},
+      {height: 0, fill: 'orange'},
+      {height: 0, fill: 'aquamarine'},
+      {height: 0, fill: 'yellow'},
+      {height: 0, fill: 'green'},
+      {height: 0, fill: 'blue'}
     ]
 
     await products.forEach(prod => {
@@ -88,8 +87,8 @@ class RevenueDashboard extends Component {
 
     const canvas = d3.select('.canva')
 
-    // BarGraphify(canvas, data, dimensions, margin, viewMode)
-    await BarGraphify(canvas, data, 600, 100, viewMode)
+    // BarGraphify(canvas, data, dimensions, margin, axisIntervals, viewMode)
+    await BarGraphify(canvas, data, 600, 100, 4, viewMode)
   }
 
   deactivateGraph = () => {
@@ -208,7 +207,10 @@ class RevenueDashboard extends Component {
                 ))}
               </table>
             </div>
-            <div className="canva" />
+            <div className="canva">
+                  {/* <svg>
+                  </svg> */}
+            </div>
             {Financials()}
           </div>
         ) : null}

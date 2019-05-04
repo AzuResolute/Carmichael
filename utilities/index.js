@@ -168,12 +168,19 @@ const NumberWithCommas = x => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, viewMode) => {
+const BarGraphify = async (
+  canvas,
+  data,
+  dimensions,
+  margin,
+  axisIntervals,
+  viewMode
+) => {
   const minimum = 1
   const axisLabelSpace = 60
   const barPadding = 4
-  const max = dimensions - (margin * 2)
-  const barWidth = (max - axisLabelSpace)/data.length - barPadding
+  const max = dimensions - margin * 2
+  const barWidth = (max - axisLabelSpace) / data.length - barPadding
   const xStart = margin + axisLabelSpace
   const yStart = dimensions - margin
   let high = 0
@@ -189,9 +196,10 @@ const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, view
     xAxisValues.push(high * (i / axisIntervals))
   }
 
-  const scaling = d3.scaleLinear()
-                    .domain([0, high])
-                    .range([1, max])
+  const scaling = d3
+    .scaleLinear()
+    .domain([0, high])
+    .range([1, max])
 
   const svg = canvas
     .append('svg')
@@ -203,10 +211,7 @@ const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, view
     .attr('y1', yStart + 1)
     .attr('y2', yStart + 1)
     .attr('x1', xStart - barPadding)
-    .attr(
-      'x2',
-      dimensions - margin
-    )
+    .attr('x2', dimensions - margin)
     .attr('stroke-width', 2)
     .attr('stroke', 'black')
 
@@ -226,20 +231,6 @@ const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, view
     .attr('font-family', 'sans-serif')
     .text(`$${NumberWithCommas(Math.floor(minimum / 100).toFixed(2))}`)
 
-  const secondTier = svg
-    .append('text')
-    .attr('x', xStart - margin)
-    .attr('y', yStart - max / 2)
-    .attr('font-family', 'sans-serif')
-    .text(`$${NumberWithCommas(Math.floor(high / 100 / 2).toFixed(2))}`)
-
-  const fourthTier = svg
-    .append('text')
-    .attr('x', xStart - margin)
-    .attr('y', yStart - max)
-    .attr('font-family', 'sans-serif')
-    .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
-
   const title = svg
     .append('text')
     .attr('x', xStart + barWidth * data.length / 3)
@@ -248,42 +239,44 @@ const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, view
     .text(`${viewMode}`)
 
   const rect = svg.selectAll('rect')
-  const line = svg.selectAll("line.xaxis")
+  const line = svg.selectAll('line.xaxis')
+  const text = svg.selectAll('text.xaxis')
 
   line
-      .data(xAxisValues)
-      .enter()
-      .append('line')
-      .attr('y1', (d, i) => {
-        return yStart - (max / axisIntervals) * (i + 1)
-      })
-      .attr('y2', (d, i) => {
-        return yStart - (max / axisIntervals) * (i + 1)
-      })
-      .attr('x1', xStart - barPadding + 1)
-      .attr(
-        'x2',
-        xStart + barWidth * data.length + barPadding * (data.length - 1) + barPadding
-      )
-      .attr('stroke-width', 2)
-      .attr('stroke', 'gray')
-      .classed("xaxis")
+    .data(xAxisValues)
+    .enter()
+    .append('line')
+    .attr('y1', (d, i) => {
+      return yStart - max / axisIntervals * (i + 1)
+    })
+    .attr('y2', (d, i) => {
+      return yStart - max / axisIntervals * (i + 1)
+    })
+    .attr('x1', xStart - barPadding + 1)
+    .attr(
+      'x2',
+      xStart +
+        barWidth * data.length +
+        barPadding * (data.length - 1) +
+        barPadding
+    )
+    .attr('stroke-width', 2)
+    .attr('stroke', 'gray')
+    .classed('xaxis')
 
-  // text
-  //     .data(xAxisValues)
-  //     .enter()
-  //     .append('text')
-  //     .attr('x', xStart - margin)
-  //     .attr('y', (d, i) => xStart - max * (i / axisIntervals))
-  //     .attr('font-family', 'sans-serif')
-  //     .text((d, i) => d)
-
-  // const fourthTier = svg
-  //   .append('text')
-  //   .attr('x', xStart - margin)
-  //   .attr('y', yStart - max * 2 / 4)
-  //   .attr('font-family', 'sans-serif')
-  //   .text(`$${NumberWithCommas(Math.floor(high / 100).toFixed(2))}`)
+  text
+    .data(xAxisValues)
+    .enter()
+    .append('text')
+    .attr('x', xStart - margin)
+    .attr('y', (d, i) => {
+      console.log('D ----->', i)
+      console.log(yStart - max * ((i + 1) / axisIntervals))
+      return yStart - max * ((i + 1) / axisIntervals)
+    })
+    .attr('font-family', 'sans-serif')
+    .text((d, i) => `$${NumberWithCommas(Math.floor(d / 100).toFixed(2))}`)
+    .classed('xaxis')
 
   rect
     .data(data)
@@ -294,7 +287,6 @@ const BarGraphify = async (canvas, data, dimensions, margin, axisIntervals, view
     .attr('fill', (d, i) => d.fill)
     .attr('x', (d, i) => xStart + i * (barWidth + barPadding))
     .attr('y', (d, i) => yStart - scaling(d.height))
-
 }
 
 // const LineGraphify = async (canvas, data, dimensions, margin, viewMode) => {
@@ -440,6 +432,6 @@ module.exports = {
   OrderRequestToExcel,
   UpdateInventoryThroughExcel,
   NumberWithCommas,
-  BarGraphify,
+  BarGraphify
   // LineGraphify
 }

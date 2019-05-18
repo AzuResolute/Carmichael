@@ -88,6 +88,7 @@ class RevenueDashboard extends Component {
     const canvas = d3.select('.canva')
 
     // BarGraphify(canvas, data, dimensions, margin, axisIntervals, viewMode)
+    // Redo Revenue using BriteCharts
     await BarGraphify(canvas, data, 600, 100, 4, viewMode)
   }
 

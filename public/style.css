@@ -1,7 +1,8 @@
 * {
   font-family: arial, sans-serif;
   color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+  /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
+}
 
 .Home {
   margin: 0px;
@@ -53,6 +54,7 @@ html {
 nav {
   background-image: url("/images/background.jpg");
   background-size: auto;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   height: 100%;
   /* Full-height: remove this if you want "auto" height */
   width: 180px;
@@ -181,6 +183,7 @@ select {
 .SubmitOrder {
   border: 4px ridge #061d48;
   display: flex;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   background-color: #1ab675;
   justify-content: center;
   padding: 10px;
@@ -188,14 +191,17 @@ select {
 
 .False {
   background-color: #b61a1a;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   -webkit-animation: xition 2s; }
 
 .Ready {
   background-color: #ddff01;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   -webkit-animation: xition 2s; }
 
 .Disabled {
   background-color: #bcbcbb;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   -webkit-animation: xition 2s; }
 
 @-webkit-keyframes xition {

@@ -169,13 +169,12 @@ class RevenueDashboard extends Component {
       CustomerExpenses,
       Demand
     } = this.state
-    if (orders.length === 0 || products.length === 0) {
+    if (orders.length === 0 || categories.length === 0) {
       return <div> Loading ... </div>
     }
     else
     {
       let data = this.activateBriteChartGraph(products, categories)
-      console.log(data)
       return (
         <div className="Container">
           <div className="ReportingOptions">

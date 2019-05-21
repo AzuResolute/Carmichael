@@ -222,6 +222,9 @@ select {
   font-weight: bolder;
   margin-bottom: 20px; }
 
+.Chart {
+  background-color: white; }
+
 body {
   font-family: sans-serif;
   margin-left: 198px; }

@@ -5,8 +5,8 @@ import {
   getAllCustomersThunk
 } from '../../store/orders'
 import {getAllCategoriesThunk} from '../../store/inventory'
-import {BarGraphify, NumberWithCommas} from '../../../utilities/'
-import {CategoryBarChart} from '../../../utilities/D3Components'
+import {NumberWithCommas} from '../../../utilities/'
+import {CategoryPieChart} from '../../../utilities/D3Components'
 import * as d3 from 'd3'
 
 class RevenueDashboard extends Component {
@@ -28,7 +28,8 @@ class RevenueDashboard extends Component {
       activated: false,
       CustomerRevenue: 0,
       CustomerExpenses: 0,
-      Demand: 0
+      Demand: 0,
+      data: []
     }
   }
 
@@ -51,39 +52,36 @@ class RevenueDashboard extends Component {
     })
   }
 
-  activateGraph = async () => {
-    const {products} = this.props
-    const {viewMode} = this.state
-    let CustomerRevenue = 0
-    let CustomerExpenses = 0
-    let Demand = 0
+  activate = async () => {
+    // const {products} = this.props
+    // const {viewMode} = this.state
+    // let CustomerRevenue = 0
+    // let CustomerExpenses = 0
+    // let Demand = 0
 
-    const data = [
-      {height: 0, fill: 'white'},
-      {height: 0, fill: 'violet'},
-      {height: 0, fill: 'red'},
-      {height: 0, fill: 'orange'},
-      {height: 0, fill: 'aquamarine'},
-      {height: 0, fill: 'yellow'},
-      {height: 0, fill: 'green'},
-      {height: 0, fill: 'blue'}
-    ]
+    // const data = [
+    //   {height: 0, fill: 'white'},
+    //   {height: 0, fill: 'violet'},
+    //   {height: 0, fill: 'red'},
+    //   {height: 0, fill: 'orange'},
+    //   {height: 0, fill: 'aquamarine'},
+    //   {height: 0, fill: 'yellow'},
+    //   {height: 0, fill: 'green'},
+    //   {height: 0, fill: 'blue'}
+    // ]
 
-    await products.forEach(prod => {
-      data[prod.CategoryID - 1].height =
-        Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
+    // await products.forEach(prod => {
+    //   // data[prod.CategoryID - 1].height =
+    //   //   Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
 
-      CustomerRevenue =
-        Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
-      CustomerExpenses += Number(prod.orderdetail.ProductCost)
-      Demand += Number(prod.orderdetail.Quantity)
-    })
-
-    await this.setState({
+    //   CustomerRevenue =
+    //     Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
+    //   CustomerExpenses += Number(prod.orderdetail.ProductCost)
+    //   Demand += Number(prod.orderdetail.Quantity)
+    // })
+    await this.activateBriteChartGraph()
+    this.setState({
       activated: true,
-      CustomerRevenue,
-      CustomerExpenses,
-      Demand
     })
 
     // const canvas = d3.select('.canva')
@@ -93,32 +91,43 @@ class RevenueDashboard extends Component {
     // await BarGraphify(canvas, data, 600, 100, 4, viewMode)
   }
 
-  activateBriteChartGraph = (products, categories) => {
+  activateBriteChartGraph = async () => {
+    const {products, categories} = this.props
     const {viewMode} = this.state
-    // let CustomerRevenue = 0
-    // let CustomerExpenses = 0
-    // let Demand = 0
+    let CustomerRevenue = 0
+    let CustomerExpenses = 0
+    let Demand = 0
 
-    const data = products.reduce((accum, prod) => {
+    const data = await products.reduce((accum, prod) => {
       let prodCat = categories[[prod.CategoryID]-1].CategoryName
       if(!accum[prodCat]) {
         accum[prodCat] = {
-          value: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
+          quantity: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
           name: prodCat
         }
       }
       else {
-        accum[prodCat].value = accum[prodCat].value + Number((prod.orderdetail[viewMode]/100).toFixed(2))
+        accum[prodCat].quantity = accum[prodCat].quantity + Number((prod.orderdetail[viewMode]/100).toFixed(2))
       }
+
+      CustomerRevenue = Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
+      CustomerExpenses += Number(prod.orderdetail.ProductCost)
+      Demand += Number(prod.orderdetail.Quantity)
+
       return accum
     }, {})
 
-    return Object.values(data)
+    this.setState({
+      CustomerRevenue,
+      CustomerExpenses,
+      Demand,
+      data: Object.values(data)
+    })
   }
 
-  deactivateGraph = () => {
+  deactivate = () => {
     this.setState({
-      activated: false
+      activated: false,
     })
   }
 
@@ -161,7 +170,7 @@ class RevenueDashboard extends Component {
 
   render() {
     let {customers, orders, categories, products} = this.props
-    let {viewMode} = this.state
+    let {viewMode, data} = this.state
     let {
       colors,
       activated,
@@ -174,7 +183,6 @@ class RevenueDashboard extends Component {
     }
     else
     {
-      let data = this.activateBriteChartGraph(products, categories)
       return (
         <div className="Container">
           <div className="ReportingOptions">
@@ -208,11 +216,11 @@ class RevenueDashboard extends Component {
 
             <div className="OptionComponent">
               {activated ? (
-                <div className="SubmitOrder" onClick={this.deactivateGraph}>
+                <div className="SubmitOrder" onClick={this.deactivate}>
                   Deactivate Financials
                 </div>
               ) : viewMode !== 'Select an Account' ? (
-                <div className="SubmitOrder Ready" onClick={this.activateGraph}>
+                <div className="SubmitOrder Ready" onClick={this.activate}>
                   Activate Financials
                 </div>
               ) : (
@@ -223,20 +231,8 @@ class RevenueDashboard extends Component {
 
           {activated ? (
             <div className="ReportingOptions">
-              <div className="Legend">
-                <table>
-                  {categories.map((cat, i) => (
-                    <tr key={cat.CategoryID}>
-                      <td style={{backgroundColor: colors[i]}}>
-                        {cat.CategoryName}
-                      </td>
-                    </tr>
-                  ))}
-                </table>
-              </div>
-              {/* <div className="canva" /> */}
-              <CategoryBarChart
-                data={data}/>
+              <CategoryPieChart
+                data={data} viewMode={viewMode}/>
               {this.Financials(Demand, CustomerRevenue, CustomerExpenses)}
             </div>
           ) : null}

@@ -1,26 +1,33 @@
 import React from 'react'
 import {
-  // Donut,
-  // Legend,
+  Donut,
+  Legend,
   // Line,
   Bar,
   // StackedArea,
   Tooltip,
   // withResponsiveness,
-  // ResponsiveContainer
+  ResponsiveContainer
 } from 'britecharts-react'
+import {colors} from 'britecharts'
 
-export const CategoryBarChart = ({data}) => {
+export const CategoryPieChart = ({data, viewMode}) => {
   return (
     <div className="Chart">
-      <Bar
+      <h3 className="ChartHeader">{viewMode} by Category</h3>
+      <Donut
         data={data}
         margin={{top: 50, bottom: 50, left: 50, right: 50}}
-        width={700}
-        height={700}
+        width={400}
+        height={400}
+        colorSchema={colors.colorSchemas.britecharts}
         isAnimated="true"
-        // style={{color: "white"}}
-      />
+        />
+        <Legend
+          data={data}
+          numberFormat="($,.2f"
+          height={data.length * 25}
+        />
     </div>
   )
 }

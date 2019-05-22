@@ -3,8 +3,7 @@
 * {
   font-family: arial, sans-serif;
   color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+  // text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .Home {
@@ -76,6 +75,7 @@ nav {
   // background: linear-gradient(#0b4fce, #d7d9df); /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   border: ridge 5px gray;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .NavSegment,
@@ -219,21 +219,25 @@ select {
   justify-content: center;
   padding: 10px;
   -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .False {
   background-color: #b61a1a;
   -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .Ready {
     background-color: #ddff01;
     -webkit-animation: xition 2s;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .Disabled {
   background-color: #bcbcbb;
   -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 @-webkit-keyframes xition {
@@ -269,4 +273,12 @@ select {
 
 .Chart {
   background-color: white;
+  color: black;
+  border: ridge 5px gray;
+  margin-top: 20px;
+}
+
+.ChartHeader {
+  color: black;
+  text-align: center;
 }

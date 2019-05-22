@@ -1,8 +1,6 @@
 * {
   font-family: arial, sans-serif;
-  color: white;
-  /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
-}
+  color: white; }
 
 .Home {
   margin: 0px;
@@ -54,7 +52,6 @@ html {
 nav {
   background-image: url("/images/background.jpg");
   background-size: auto;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   height: 100%;
   /* Full-height: remove this if you want "auto" height */
   width: 180px;
@@ -68,7 +65,8 @@ nav {
   left: 0;
   overflow-x: hidden;
   /* Disable horizontal scroll */
-  border: ridge 5px gray; }
+  border: ridge 5px gray;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 .NavSegment,
 nav a {
@@ -183,26 +181,26 @@ select {
 .SubmitOrder {
   border: 4px ridge #061d48;
   display: flex;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   background-color: #1ab675;
   justify-content: center;
   padding: 10px;
-  -webkit-animation: xition 2s; }
+  -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 .False {
   background-color: #b61a1a;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  -webkit-animation: xition 2s; }
+  -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 .Ready {
   background-color: #ddff01;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  -webkit-animation: xition 2s; }
+  -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 .Disabled {
   background-color: #bcbcbb;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  -webkit-animation: xition 2s; }
+  -webkit-animation: xition 2s;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
 
 @-webkit-keyframes xition {
   from {
@@ -229,7 +227,14 @@ select {
   margin-bottom: 20px; }
 
 .Chart {
-  background-color: white; }
+  background-color: white;
+  color: black;
+  border: ridge 5px gray;
+  margin-top: 20px; }
+
+.ChartHeader {
+  color: black;
+  text-align: center; }
 
 body {
   font-family: sans-serif;

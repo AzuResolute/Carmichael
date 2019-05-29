@@ -162,8 +162,8 @@ class RevenueDashboard extends Component {
         </td>
       </tr>
       <tr>
-        <td>Efficiency Ratio</td>
-        <td>{(CustomerExpenses / CustomerRevenue).toFixed(4)}</td>
+        <td>Gross Profit Margin</td>
+        <td>{(((CustomerRevenue - CustomerExpenses) / CustomerRevenue) * 100).toFixed(2)}%</td>
       </tr>
     </table>
   )

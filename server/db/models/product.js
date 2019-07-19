@@ -53,6 +53,3 @@ Product.loadSeed = async function(obj) {
 
 module.exports = Product
 
-//ProductID	ProductName	CategoryID QuantityPerUnit UnitPrice UnitsInStock
-
-//SupplierID	UnitsOnOrder ReorderLevel Discontinued

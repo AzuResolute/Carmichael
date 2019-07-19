@@ -81,6 +81,3 @@ OrderDetails.testLoadSeed = function(obj) {
 
 module.exports = OrderDetails
 
-// OrderID	ProductID
-
-// UnitPrice	Quantity	Discount	GrossProfitMargin

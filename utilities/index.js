@@ -2,14 +2,14 @@ const XLSX = require('xlsx')
 const d3 = require('d3')
 
 const NorthwindPath =
-  '/Users/janczarinajavier/Carmichael/utilities/Northwind.xls'
+  'C:/Users/roger/Documents/Projects/Insight/utilities/Northwind.xls'
 const OrderRequestPath =
-  '/Users/janczarinajavier/Carmichael/utilities/OrderRequest.xlsx'
+  'C:/Users/roger/Documents/Projects/Insight/utilities/OrderRequest.xlsx'
 const UpdateInventoryPath =
-  '/Users/janczarinajavier/Carmichael/utilities/UpdateInventory.xlsx'
+  'C:/Users/roger/Documents/Projects/Insight/utilities/UpdateInventory.xlsx'
 const UpdateInventoryPathBackUp =
-  '/Users/janczarinajavier/Carmichael/utilities/UpdateInventory.xlsx'
-const Test = '/Users/janczarinajavier/Carmichael/utilities/test.xlsx'
+  'C:/Users/roger/Documents/Projects/Insight/utilities/UpdateInventory.xlsx'
+const Test = 'C:/Users/roger/Documents/Projects/Insight/utilities/utilities/test.xlsx'
 const abc = {
   1: 'A',
   2: 'B',

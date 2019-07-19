@@ -1,4 +1,4 @@
-Carmichael Inventory Management System
+### Carmichael Inventory Management System
 
 By Roger Lester Palabasan
 
@@ -11,7 +11,7 @@ We utilize Sheetjs (xlsx) and D3js (d3) in addition to Sequelize, Express, React
 
 Although the backend is nested on PostGres, we can obtain the initial seed from "NorthWind.xlsx" by running "npm run seed".
 
-Note: Many of the Excel dependencies have url addresses that map to the local address of said files in the developer's computer. This is because sheetjs runs in Node. In order to utilize the Excel functionalities, please change the url address to the local addresses of the downloaded Excel files. That said, the app can function without Excel files as long as you have PostGres and Excel.
+Note: Many of the Excel dependencies have url addresses that map to the local address of said files in the developer's computer. This is because sheetjs runs in Node. In order to utilize the Excel functionalities, please remap the url address in the Excel dependencies to the local addresses of the downloaded Excel files. Because of Excel local dependency, the application must be run locally.
 
 ---
 

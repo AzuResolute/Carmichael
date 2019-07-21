@@ -9,7 +9,6 @@ router.get('/customers', async (request, response, next) => {
     console.log(error)
   }
 })
-//good
 
 router.get('/target/:OrderID', async (request, response, next) => {
   try {

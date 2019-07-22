@@ -5,7 +5,7 @@ const OrderRequestPath =
 const UpdateInventoryPath =
   'C:/Users/roger/Documents/Projects/Insight/utilities/UpdateInventory.xlsx'
 const Test =
-    'C:/Users/roger/Documents/Projects/Insight/utilities/utilities/test.xlsx'
+  'C:/Users/roger/Documents/Projects/Insight/utilities/utilities/test.xlsx'
 
 module.exports = {
     NorthwindPath,

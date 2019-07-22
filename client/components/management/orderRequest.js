@@ -139,19 +139,19 @@ class OrderReceived extends Component {
       ThreeMonths: 91,
       SixMonths: 183
     }
-    let tableMinimumHeight = 13
+    let tableMinimumHeight = 10
     const QuantEnumerator = num => {
       let arr = []
       if (num === 0) {
-        return [<option key={0}>Out Of Stock</option>]
+        return [<option key={0} style={{color: 'black'}}>Out Of Stock</option>]
       }
       arr.push(
-        <option value={0} selected>
+        <option value={0} selected style={{color: 'black'}}>
           {0}
         </option>
       )
       for (let i = 1; i <= num; i++) {
-        arr.push(<option value={i}>{i}</option>)
+        arr.push(<option value={i} style={{color: 'black'}}>{i}</option>)
       }
       return arr
     }
@@ -207,9 +207,12 @@ class OrderReceived extends Component {
             <div className="OptionComponent">
               <div>Customers: </div>
               <select name="customers" size="1" onChange={this.customerHandler}>
-                <option value="SELECT ID">Select ID</option>
+                <option value="SELECT ID" style={{color: 'black'}}>Select ID</option>
                 {customers.map(cust => (
-                  <option key={cust.CustomerID} value={cust.CustomerID}>
+                  <option
+                    key={cust.CustomerID}
+                    value={cust.CustomerID}
+                    style={{color: 'black'}}>
                     {cust.CompanyName} ({cust.CustomerID})
                   </option>
                 ))}
@@ -220,7 +223,10 @@ class OrderReceived extends Component {
               <div>Delivery: </div>
               <select name="delivery" size="1" onChange={this.deliveryHandler}>
                 {Object.keys(timing).map(prop => (
-                  <option key={prop.id} value={timing[prop]}>
+                  <option
+                    key={prop.id}
+                    value={timing[prop]}
+                    style={{color: 'black'}}>
                     {prop}
                   </option>
                 ))}
@@ -250,9 +256,9 @@ class OrderReceived extends Component {
                 id="ProductSelector"
                 onChange={this.currentProdHandler}
               >
-                <option value={5}>Select a Product</option>
+                <option value={5} style={{color: 'black'}}>Select a Product</option>
                 {products.map(prod => (
-                  <option key={prod.ProductID} value={prod.ProductID}>
+                  <option key={prod.ProductID} value={prod.ProductID} style={{color: 'black'}}>
                     {prod.ProductName}
                   </option>
                 ))}

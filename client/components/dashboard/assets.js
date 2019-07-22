@@ -172,7 +172,10 @@ class AssetsDashboard extends Component {
               <div>Client: </div>
               <select name="customers" size="1" onChange={this.customerHandler}>
                 {customers.map(cust => (
-                  <option key={cust.CustomerID} value={cust.CustomerID}>
+                  <option
+                    key={cust.CustomerID}
+                    value={cust.CustomerID}
+                    style={{color: 'black'}}>
                     {cust.CompanyName} ({cust.CustomerID})
                   </option>
                 ))}
@@ -188,9 +191,9 @@ class AssetsDashboard extends Component {
                 size="1"
                 onChange={this.viewModeHandler}
               >
-                <option value="Select an Account">Select an Account</option>
-                <option value="ProductRevenue">Revenue</option>
-                <option value="ProductCost">Expenses</option>
+                <option value="Select an Account" style={{color: 'black'}}>Select an Account</option>
+                <option value="ProductRevenue" style={{color: 'black'}}>Revenue</option>
+                <option value="ProductCost" style={{color: 'black'}}>Expenses</option>
               </select>
             </div>
           ) : null}

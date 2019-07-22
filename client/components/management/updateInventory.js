@@ -97,9 +97,12 @@ class UpdateInventory extends Component {
           <div className="OptionComponent">
             <div>Category: </div>
             <select name="categories" size="1" onChange={this.categoryHandler}>
-              <option value="All Categories">All Categories</option>
+              <option value="All Categories" style={{color: 'black'}}>All Categories</option>
               {categories.map(cat => (
-                <option key={cat.CategoryID} value={cat.CategoryID}>
+                <option
+                  key={cat.CategoryID}
+                  value={cat.CategoryID}
+                  style={{color: 'black'}}>
                   {cat.CategoryName}
                 </option>
               ))}
@@ -110,7 +113,7 @@ class UpdateInventory extends Component {
             <div>Sort By: </div>
             <select name="sortBy" size="1" onChange={this.sortbyHandler}>
               {productProps.map(prop => (
-                <option key value={prop}>
+                <option key value={prop} style={{color: 'black'}}>
                   {prop}
                 </option>
               ))}
@@ -120,8 +123,8 @@ class UpdateInventory extends Component {
           <div className="OptionComponent">
             <div>Sort Order: </div>
             <select name="sortOrder" size="1" onChange={this.sortorderHandler}>
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
+              <option value="ASC" style={{color: 'black'}}>Ascending</option>
+              <option value="DESC" style={{color: 'black'}}>Descending</option>
             </select>
           </div>
         </div>

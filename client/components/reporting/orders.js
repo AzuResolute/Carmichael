@@ -80,9 +80,12 @@ class OrdersReporting extends Component {
           <div className="OptionComponent">
             <div>Customers: </div>
             <select name="customers" size="1" onChange={this.customerHandler}>
-              <option value="All Customers">All Customers</option>
+              <option value="All Customers" style={{color: 'black'}}>All Customers</option>
               {customers.map(cust => (
-                <option key={cust.CustomerID} value={cust.CustomerID}>
+                <option
+                  key={cust.CustomerID}
+                  value={cust.CustomerID}
+                  style={{color: 'black'}}>
                   {cust.CompanyName} ({cust.CustomerID})
                 </option>
               ))}
@@ -93,7 +96,7 @@ class OrdersReporting extends Component {
             <div>Sort By: </div>
             <select name="sortBy" size="1" onChange={this.sortbyHandler}>
               {orderProps.map(prop => (
-                <option key value={prop}>
+                <option key value={prop} style={{color: 'black'}}>
                   {prop}
                 </option>
               ))}
@@ -103,8 +106,8 @@ class OrdersReporting extends Component {
           <div className="OptionComponent">
             <div>Sort Order: </div>
             <select name="sortOrder" size="1" onChange={this.sortorderHandler}>
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
+              <option value="ASC" style={{color: 'black'}}>Ascending</option>
+              <option value="DESC" style={{color: 'black'}}>Descending</option>
             </select>
           </div>
         </div>

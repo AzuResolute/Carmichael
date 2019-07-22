@@ -57,7 +57,10 @@ class CustomerAccountsReporting extends Component {
               size="1" onChange={this.customerHandler}
             >
               {customers.map(cust => (
-                <option key={cust.CustomerID} value={cust.CustomerID}>
+                <option
+                  key={cust.CustomerID}
+                  value={cust.CustomerID}
+                  style={{color: 'black'}}>
                   {cust.CompanyName} ({cust.CustomerID})
                 </option>
               ))}

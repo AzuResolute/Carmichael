@@ -8,7 +8,7 @@
 
 .Home {
   margin: 0px;
-  min-height: 100%;
+  // min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -112,6 +112,7 @@ nav a:hover {
 .ReportingOptions {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
   margin-top: 30px;
 }
 
@@ -180,19 +181,20 @@ select {
 
 .InputForm{
   display: flex;
+  // flex-wrap: wrap;
   border: ridge 2px white;
 }
 
 .OrderReqInfo{
   border: ridge 2px white;
   background-color: slateblue;
-  max-width: 40%;
+  // max-width: 40%;
 }
 
 .OrderReqPurchase{
   border: ridge 2px white;
   background-color: slateblue;
-  width: 70%;
+  // width: 70%;
   height: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -280,5 +282,9 @@ select {
 
 .ChartHeader {
   color: black;
+  text-align: center;
+}
+
+.AppTitle {
   text-align: center;
 }

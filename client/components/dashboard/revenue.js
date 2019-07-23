@@ -7,23 +7,12 @@ import {
 import {getAllCategoriesThunk} from '../../store/inventory'
 import {NumberWithCommas} from '../../../utilities/'
 import {CategoryPieChart} from '../../../utilities/D3Components'
-import * as d3 from 'd3'
 
 class RevenueDashboard extends Component {
   constructor() {
     super()
     this.state = {
       currentCustomer: 'ALFKI',
-      colors: [
-        'white',
-        'violet',
-        'red',
-        'orange',
-        'aquamarine',
-        'yellow',
-        'green',
-        'blue'
-      ],
       viewMode: 'Select an Account',
       activated: false,
       CustomerRevenue: 0,
@@ -53,42 +42,10 @@ class RevenueDashboard extends Component {
   }
 
   activate = async () => {
-    // const {products} = this.props
-    // const {viewMode} = this.state
-    // let CustomerRevenue = 0
-    // let CustomerExpenses = 0
-    // let Demand = 0
-
-    // const data = [
-    //   {height: 0, fill: 'white'},
-    //   {height: 0, fill: 'violet'},
-    //   {height: 0, fill: 'red'},
-    //   {height: 0, fill: 'orange'},
-    //   {height: 0, fill: 'aquamarine'},
-    //   {height: 0, fill: 'yellow'},
-    //   {height: 0, fill: 'green'},
-    //   {height: 0, fill: 'blue'}
-    // ]
-
-    // await products.forEach(prod => {
-    //   // data[prod.CategoryID - 1].height =
-    //   //   Number(prod.orderdetail[viewMode]) + data[prod.CategoryID - 1].height
-
-    //   CustomerRevenue =
-    //     Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
-    //   CustomerExpenses += Number(prod.orderdetail.ProductCost)
-    //   Demand += Number(prod.orderdetail.Quantity)
-    // })
     await this.activateBriteChartGraph()
     this.setState({
       activated: true,
     })
-
-    // const canvas = d3.select('.canva')
-
-    // BarGraphify(canvas, data, dimensions, margin, axisIntervals, viewMode)
-    // Redo Revenue using BriteCharts
-    // await BarGraphify(canvas, data, 600, 100, 4, viewMode)
   }
 
   activateBriteChartGraph = async () => {
@@ -169,10 +126,9 @@ class RevenueDashboard extends Component {
   )
 
   render() {
-    let {customers, orders, categories, products} = this.props
+    let {customers, orders, categories} = this.props
     let {viewMode, data} = this.state
     let {
-      colors,
       activated,
       CustomerRevenue,
       CustomerExpenses,
@@ -185,6 +141,14 @@ class RevenueDashboard extends Component {
     {
       return (
         <div className="Container">
+          <div className="Instructions">
+            <div id="InstHeading">Instructions:</div>
+          <div/>
+          <div>Client - Select the Client whose figures you want to analyze</div>
+          <div>Account - Select the Account you want to analyze</div>
+          <div>Once both are chosen, the "Activate Financials" button will appear</div>
+          <div>To change parameters, press "Deactivate Financials"</div>
+        </div>
           <div className="ReportingOptions">
             {!activated ? (
               <div className="OptionComponent">

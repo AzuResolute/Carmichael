@@ -213,7 +213,7 @@ class OrderReceived extends Component {
                     key={cust.CustomerID}
                     value={cust.CustomerID}
                     style={{color: 'black'}}>
-                    {cust.CompanyName} ({cust.CustomerID})
+                    {cust.CompanyName}
                   </option>
                 ))}
               </select>

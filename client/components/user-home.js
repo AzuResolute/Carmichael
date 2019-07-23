@@ -1,9 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-/**
- * COMPONENT
- */
 export const UserHome = () => {
 
   return (

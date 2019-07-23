@@ -11,6 +11,17 @@ import {
 } from 'britecharts-react'
 import {colors} from 'britecharts'
 
+const categories = [
+  'Beverages',
+  'Condiments',
+  'Confections',
+  'Dairy Products',
+  'Grains/Cereals',
+  'Meat/Poultry',
+  'Produce',
+  'Seafood'
+]
+
 export const CategoryPieChart = ({data, viewMode}) => {
   return (
     <div className="Chart">
@@ -20,17 +31,36 @@ export const CategoryPieChart = ({data, viewMode}) => {
         margin={{top: 30, bottom: 30, left: 30, right: 30}}
         width={400}
         height={400}
-        colorSchema={colors.colorSchemas.purple}
+        colorSchema={["#6aedc7", "#39c2c9", "#ffce00", "#ffa71a", "#f866b9", "#998ce3", '#0000ff', '#00FF00']}
         isAnimated="true"
         />
         <Legend
           data={data}
-          numberFormat="($,.2f"
-          colorSchema={colors.colorSchemas.purple}
+          numberFormat="($,.0f"
+          colorSchema={["#6aedc7", "#39c2c9", "#ffce00", "#ffa71a", "#f866b9", "#998ce3", '#0000ff', '#00FF00']}
           height={data.length * 25}
         />
     </div>
   )
+}
+
+export const CategoryPieDataInit = categories.reduce((accum, cat) => {
+  accum[cat] = {
+    quantity: 0.01,
+    name: cat
+  }
+  return accum
+},{})
+
+export const YearlyDeltaDataInit = year => {
+  return categories.reduce((accum, cat) => {
+    accum[cat] = {
+      value: 0.01,
+      name: year,
+      group: cat
+    }
+    return accum
+  },{})
 }
 
 export const YearlyDeltaGroupBarChart = ({data, viewMode}) => {
@@ -43,13 +73,13 @@ export const YearlyDeltaGroupBarChart = ({data, viewMode}) => {
         margin={{top: 30, bottom: 30, left: 30, right: 30}}
         width={600}
         height={400}
-        colorSchema={colors.colorSchemas.purple}
+        colorSchema={["#998ce3", '#0000ff', '#00FF00', "#6aedc7", "#39c2c9", "#ffce00", "#ffa71a", "#f866b9"]}
         // isAnimated="true"
         />
         <Legend
           data={legend}
-          numberFormat="($,.2f"
-          colorSchema={colors.colorSchemas.purple}
+          numberFormat="($,.0f"
+          colorSchema={["#6aedc7", "#39c2c9", "#ffce00", "#ffa71a", "#f866b9", "#998ce3", '#0000ff', '#00FF00']}
           height={data.length * 25}
         />
     </div>

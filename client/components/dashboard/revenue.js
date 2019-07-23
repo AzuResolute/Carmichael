@@ -6,7 +6,12 @@ import {
 } from '../../store/orders'
 import {getAllCategoriesThunk} from '../../store/inventory'
 import {NumberWithCommas, PropertySort} from '../../../utilities/'
-import {CategoryPieChart, YearlyDeltaGroupBarChart} from '../../../utilities/D3Components'
+import {
+  CategoryPieChart,
+  YearlyDeltaGroupBarChart,
+  CategoryPieDataInit,
+  YearlyDeltaDataInit
+} from '../../../utilities/D3Components'
 
 class RevenueDashboard extends Component {
   constructor() {
@@ -19,16 +24,6 @@ class RevenueDashboard extends Component {
       CustomerExpenses: 0,
       Demand: 0,
       pieData: [],
-      // yearlyDeltaData: [
-      //   {name: "shiny", group: "Rock", value: 3, date: "2011-01-05"},
-      //   {name: "shiny", group: "Paper", value: 10, date: "2011-01-06"},
-      //   {name: "shiny", group: "Scissor", value: 16, date: "2011-01-07"},
-      //   {name: "shiny", group: "Prayer", value: 23, date: "2011-01-08"},
-      //   {name: "radiant", group: "Rock", value: 23, date: "2011-01-05"},
-      //   {name: "radiant", group: "Paper", value: 16, date: "2011-01-06"},
-      //   {name: "radiant", group: "Scissor", value: 10, date: "2011-01-07"},
-      //   {name: "radiant", group: "Prayer", value: 4, date: "2011-01-08"}
-      // ]
       yearlyDeltaData: []
     }
   }
@@ -70,43 +65,45 @@ class RevenueDashboard extends Component {
       let prodCat = categories[[prod.CategoryID]-1].CategoryName
       let year = orders.find(order => (order.OrderID === prod.orderdetail.OrderID)).OrderDate.slice(0,4)
 
-      if(!accum.pieData[prodCat]) {
-        accum.pieData[prodCat] = {
-          quantity: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
-          name: prodCat
-        }
-      }
-      else {
+      // if(!accum.pieData[prodCat]) {
+      //   accum.pieData[prodCat] = {
+      //     quantity: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
+      //     name: prodCat
+      //   }
+      // }
+      // else {
         accum.pieData[prodCat].quantity = 
           accum.pieData[prodCat].quantity
           + Number((prod.orderdetail[viewMode]/100).toFixed(2))
-      }
+      // }
 
       if(!accum.yearlyDeltaData[year]) {
-        accum.yearlyDeltaData[year] = {}
+        accum.yearlyDeltaData[year] = YearlyDeltaDataInit(year)
       }
 
-      if(!accum.yearlyDeltaData[year][prodCat]){
-        accum.yearlyDeltaData[year][prodCat] = {
-          value: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
-          name: year,
-          group: prodCat
-        }
-      }
-      else {
+      // if(!accum.yearlyDeltaData[year][prodCat]){
+      //   accum.yearlyDeltaData[year][prodCat] = {
+      //     value: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
+      //     name: year,
+      //     group: prodCat
+      //   }
+      // }
+      // else {
         accum.yearlyDeltaData[year][prodCat].value =
           accum.yearlyDeltaData[year][prodCat].value
           + Number((prod.orderdetail[viewMode]/100).toFixed(2))
-      }
+      // }
 
       CustomerRevenue = Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
       CustomerExpenses += Number(prod.orderdetail.ProductCost)
       Demand += Number(prod.orderdetail.Quantity)
 
       return accum
-    }, { pieData: {}, yearlyDeltaData: {}})
+    }, { pieData: CategoryPieDataInit, yearlyDeltaData: {}})
 
-    const pieData = Object.values(data.pieData).sort(PropertySort('name'))
+    console.log(data)
+
+    const pieData = Object.values(data.pieData)
     const yearlyDeltaData = {
       figures: Object.values(data.yearlyDeltaData).map(
               elem => (Object.values(elem))
@@ -115,11 +112,12 @@ class RevenueDashboard extends Component {
                 accum.push(elem)
               })
               return accum
-            },[]).sort(PropertySort('name')),
-      legend: Object.values(data.pieData).sort(PropertySort('name'))
+            },[]),
+      legend: Object.values(data.pieData)
     }
 
-    console.log(Object.values(data.yearlyDeltaData))
+    console.log('pie ---->', pieData)
+    console.log('yearlyDelta ---->', yearlyDeltaData)
 
     this.setState({
       CustomerRevenue,

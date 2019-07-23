@@ -5,8 +5,8 @@ import {
   getAllCustomersThunk
 } from '../../store/orders'
 import {getAllCategoriesThunk} from '../../store/inventory'
-import {NumberWithCommas} from '../../../utilities/'
-import {CategoryPieChart} from '../../../utilities/D3Components'
+import {NumberWithCommas, PropertySort} from '../../../utilities/'
+import {CategoryPieChart, YearlyDeltaGroupBarChart} from '../../../utilities/D3Components'
 
 class RevenueDashboard extends Component {
   constructor() {
@@ -18,7 +18,18 @@ class RevenueDashboard extends Component {
       CustomerRevenue: 0,
       CustomerExpenses: 0,
       Demand: 0,
-      data: []
+      pieData: [],
+      // yearlyDeltaData: [
+      //   {name: "shiny", group: "Rock", value: 3, date: "2011-01-05"},
+      //   {name: "shiny", group: "Paper", value: 10, date: "2011-01-06"},
+      //   {name: "shiny", group: "Scissor", value: 16, date: "2011-01-07"},
+      //   {name: "shiny", group: "Prayer", value: 23, date: "2011-01-08"},
+      //   {name: "radiant", group: "Rock", value: 23, date: "2011-01-05"},
+      //   {name: "radiant", group: "Paper", value: 16, date: "2011-01-06"},
+      //   {name: "radiant", group: "Scissor", value: 10, date: "2011-01-07"},
+      //   {name: "radiant", group: "Prayer", value: 4, date: "2011-01-08"}
+      // ]
+      yearlyDeltaData: []
     }
   }
 
@@ -42,14 +53,14 @@ class RevenueDashboard extends Component {
   }
 
   activate = async () => {
-    await this.activateBriteChartGraph()
+    await this.activateBriteCharts()
     this.setState({
       activated: true,
     })
   }
 
-  activateBriteChartGraph = async () => {
-    const {products, categories} = this.props
+  activateBriteCharts = async () => {
+    const {products, categories, orders} = this.props
     const {viewMode} = this.state
     let CustomerRevenue = 0
     let CustomerExpenses = 0
@@ -57,14 +68,35 @@ class RevenueDashboard extends Component {
 
     const data = await products.reduce((accum, prod) => {
       let prodCat = categories[[prod.CategoryID]-1].CategoryName
-      if(!accum[prodCat]) {
-        accum[prodCat] = {
+      let year = orders.find(order => (order.OrderID === prod.orderdetail.OrderID)).OrderDate.slice(0,4)
+
+      if(!accum.pieData[prodCat]) {
+        accum.pieData[prodCat] = {
           quantity: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
           name: prodCat
         }
       }
       else {
-        accum[prodCat].quantity = accum[prodCat].quantity + Number((prod.orderdetail[viewMode]/100).toFixed(2))
+        accum.pieData[prodCat].quantity = 
+          accum.pieData[prodCat].quantity
+          + Number((prod.orderdetail[viewMode]/100).toFixed(2))
+      }
+
+      if(!accum.yearlyDeltaData[year]) {
+        accum.yearlyDeltaData[year] = {}
+      }
+
+      if(!accum.yearlyDeltaData[year][prodCat]){
+        accum.yearlyDeltaData[year][prodCat] = {
+          value: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
+          name: year,
+          group: prodCat
+        }
+      }
+      else {
+        accum.yearlyDeltaData[year][prodCat].value =
+          accum.yearlyDeltaData[year][prodCat].value
+          + Number((prod.orderdetail[viewMode]/100).toFixed(2))
       }
 
       CustomerRevenue = Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
@@ -72,13 +104,29 @@ class RevenueDashboard extends Component {
       Demand += Number(prod.orderdetail.Quantity)
 
       return accum
-    }, {})
+    }, { pieData: {}, yearlyDeltaData: {}})
+
+    const pieData = Object.values(data.pieData).sort(PropertySort('name'))
+    const yearlyDeltaData = {
+      figures: Object.values(data.yearlyDeltaData).map(
+              elem => (Object.values(elem))
+            ).reduce((accum, arr) => {
+              arr.forEach(elem => {
+                accum.push(elem)
+              })
+              return accum
+            },[]).sort(PropertySort('name')),
+      legend: Object.values(data.pieData).sort(PropertySort('name'))
+    }
+
+    console.log(Object.values(data.yearlyDeltaData))
 
     this.setState({
       CustomerRevenue,
       CustomerExpenses,
       Demand,
-      data: Object.values(data)
+      pieData,
+      yearlyDeltaData
     })
   }
 
@@ -127,7 +175,7 @@ class RevenueDashboard extends Component {
 
   render() {
     let {customers, orders, categories} = this.props
-    let {viewMode, data} = this.state
+    let {viewMode, pieData, yearlyDeltaData} = this.state
     let {
       activated,
       CustomerRevenue,
@@ -199,10 +247,12 @@ class RevenueDashboard extends Component {
           {activated ? (
             <div className="ReportingOptions">
               <CategoryPieChart
-                data={data} viewMode={viewMode}/>
+                data={pieData} viewMode={viewMode}/>
+              <YearlyDeltaGroupBarChart
+                data={yearlyDeltaData} viewMode={viewMode}/>
               {this.Financials(Demand, CustomerRevenue, CustomerExpenses)}
             </div>
-          ) : null}
+          ) : null}        
         </div>
       )
     }

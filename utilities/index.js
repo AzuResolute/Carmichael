@@ -295,11 +295,24 @@ const BarGraphify = async (
     .attr('y', (d, i) => yStart - scaling(d.height))
 }
 
+const PropertySort = (property) => {
+  var sortOrder = 1;
+  if(property[0] === "-") {
+      sortOrder = -1;
+      property = property.substr(1);
+  }
+  return function (a, b) {
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+      return result * sortOrder;
+  }
+}
+
 module.exports = {
   DateExcel2JavaScript,
   SeedSheetLoader,
   OrderRequestToExcel,
   UpdateInventoryThroughExcel,
   NumberWithCommas,
-  BarGraphify
+  BarGraphify,
+  PropertySort
 }

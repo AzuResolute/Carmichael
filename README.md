@@ -4,7 +4,7 @@ By Roger Lester Palabasan
 
 ---
 
-![Alt text](/public/images/ScreenShots/CarmichaelHome.png.png?raw=true "HomePage")
+![Alt text](/public/images/ScreenShots/CarmichaelHome.png?raw=true "HomePage")
 
 ---
 

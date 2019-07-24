@@ -2,12 +2,7 @@ import React from 'react'
 import {
   Donut,
   Legend,
-  // Line,
-  Bar,
   GroupedBar,
-  Tooltip,
-  // withResponsiveness,
-  ResponsiveContainer
 } from 'britecharts-react'
 import {colors} from 'britecharts'
 
@@ -76,7 +71,7 @@ export const YearlyDeltaGroupBarChart = ({data, viewMode, customer}) => {
         width={600}
         height={400}
         colorSchema={["#998ce3", '#0000ff', '#00FF00', "#6aedc7", "#39c2c9", "#ffce00", "#ffa71a", "#f866b9"]}
-        // isAnimated="true"
+        // isAnimated="true" <-- This caused issues
         />
         <Legend
           data={legend}

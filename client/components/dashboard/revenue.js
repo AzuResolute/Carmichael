@@ -17,7 +17,8 @@ class RevenueDashboard extends Component {
   constructor() {
     super()
     this.state = {
-      currentCustomer: 'ALFKI',
+      currentCustomerID: 'ALFKI',
+      currentCustomerName: 'Alfreds Futterkiste',
       viewMode: 'Select an Account',
       activated: false,
       CustomerRevenue: 0,
@@ -31,14 +32,17 @@ class RevenueDashboard extends Component {
   async componentDidMount() {
     await this.props.onLoadCategories()
     await this.props.onLoadCustomers()
-    await this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomer)
+    await this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomerID)
   }
 
   customerHandler = async evt => {
+    let customerProps = evt.target.value.split(',')
     await this.setState({
-      currentCustomer: evt.target.value
+      currentCustomerID: customerProps[0],
+      currentCustomerName: customerProps[1]
     })
-    this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomer)
+    await this.props.onLoadOrders('OrderID', 'ASC', this.state.currentCustomerID)
+    console.log(this.state)
   }
 
   viewModeHandler = evt => {
@@ -65,34 +69,17 @@ class RevenueDashboard extends Component {
       let prodCat = categories[[prod.CategoryID]-1].CategoryName
       let year = orders.find(order => (order.OrderID === prod.orderdetail.OrderID)).OrderDate.slice(0,4)
 
-      // if(!accum.pieData[prodCat]) {
-      //   accum.pieData[prodCat] = {
-      //     quantity: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
-      //     name: prodCat
-      //   }
-      // }
-      // else {
         accum.pieData[prodCat].quantity = 
           accum.pieData[prodCat].quantity
           + Number((prod.orderdetail[viewMode]/100).toFixed(2))
-      // }
 
       if(!accum.yearlyDeltaData[year]) {
         accum.yearlyDeltaData[year] = YearlyDeltaDataInit(year)
       }
 
-      // if(!accum.yearlyDeltaData[year][prodCat]){
-      //   accum.yearlyDeltaData[year][prodCat] = {
-      //     value: Number((prod.orderdetail[viewMode]/100).toFixed(2)),
-      //     name: year,
-      //     group: prodCat
-      //   }
-      // }
-      // else {
         accum.yearlyDeltaData[year][prodCat].value =
           accum.yearlyDeltaData[year][prodCat].value
           + Number((prod.orderdetail[viewMode]/100).toFixed(2))
-      // }
 
       CustomerRevenue = Number(prod.orderdetail.ProductRevenue) + CustomerRevenue
       CustomerExpenses += Number(prod.orderdetail.ProductCost)
@@ -100,8 +87,6 @@ class RevenueDashboard extends Component {
 
       return accum
     }, { pieData: CategoryPieDataInit, yearlyDeltaData: {}})
-
-    console.log(data)
 
     const pieData = Object.values(data.pieData)
     const yearlyDeltaData = {
@@ -115,9 +100,6 @@ class RevenueDashboard extends Component {
             },[]),
       legend: Object.values(data.pieData)
     }
-
-    console.log('pie ---->', pieData)
-    console.log('yearlyDelta ---->', yearlyDeltaData)
 
     this.setState({
       CustomerRevenue,
@@ -142,7 +124,7 @@ class RevenueDashboard extends Component {
       </tr>
       <tr>
         <td>Client</td>
-        <td>{this.state.currentCustomer}</td>
+        <td>{this.state.currentCustomerID}</td>
       </tr>
       <tr>
         <td>Purchases</td>
@@ -173,12 +155,15 @@ class RevenueDashboard extends Component {
 
   render() {
     let {customers, orders, categories} = this.props
-    let {viewMode, pieData, yearlyDeltaData} = this.state
     let {
       activated,
       CustomerRevenue,
       CustomerExpenses,
-      Demand
+      Demand,
+      currentCustomerName,
+      viewMode,
+      pieData,
+      yearlyDeltaData
     } = this.state
     if (orders.length === 0 || categories.length === 0) {
       return <div> Loading ... </div>
@@ -203,7 +188,7 @@ class RevenueDashboard extends Component {
                   {customers.map(cust => (
                     <option
                       key={cust.CustomerID}
-                      value={cust.CustomerID}
+                      value={`${cust.CustomerID},${cust.CompanyName}`}
                       style={{color: 'black'}}>
                       {cust.CompanyName} ({cust.CustomerID})
                     </option>
@@ -245,9 +230,15 @@ class RevenueDashboard extends Component {
           {activated ? (
             <div className="ReportingOptions">
               <CategoryPieChart
-                data={pieData} viewMode={viewMode}/>
+                data={pieData}
+                viewMode={viewMode}
+                customer={currentCustomerName}
+              />
               <YearlyDeltaGroupBarChart
-                data={yearlyDeltaData} viewMode={viewMode}/>
+                data={yearlyDeltaData}
+                viewMode={viewMode}
+                customer={currentCustomerName}
+              />
               {this.Financials(Demand, CustomerRevenue, CustomerExpenses)}
             </div>
           ) : null}        

@@ -22,9 +22,10 @@ const categories = [
   'Seafood'
 ]
 
-export const CategoryPieChart = ({data, viewMode}) => {
+export const CategoryPieChart = ({data, viewMode, customer}) => {
   return (
     <div className="Chart">
+      <h3 className="ChartHeader">{customer}</h3>
       <h3 className="ChartHeader">{viewMode} by Category</h3>
       <Donut
         data={data}
@@ -63,10 +64,11 @@ export const YearlyDeltaDataInit = year => {
   },{})
 }
 
-export const YearlyDeltaGroupBarChart = ({data, viewMode}) => {
+export const YearlyDeltaGroupBarChart = ({data, viewMode, customer}) => {
   const {figures, legend} = data
   return (
     <div className="Chart">
+      <h3 className="ChartHeader">{customer}</h3>
       <h3 className="ChartHeader">{viewMode} Yearly Delta</h3>
       <GroupedBar
         data={figures}

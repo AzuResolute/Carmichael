@@ -4,7 +4,6 @@ import {
   Legend,
   GroupedBar,
 } from 'britecharts-react'
-import {colors} from 'britecharts'
 
 const categories = [
   'Beverages',

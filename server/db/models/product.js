@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
-// const {Category} = require('../models')
 
 const Product = db.define('product', {
   ProductID: {
@@ -18,7 +17,6 @@ const Product = db.define('product', {
   },
   UnitPrice: {
     type: Sequelize.INTEGER
-    // This will be in cents - like grace shopper
   },
   UnitsInStock: {
     type: Sequelize.INTEGER,

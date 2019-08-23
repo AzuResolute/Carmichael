@@ -32,7 +32,6 @@ const OrderDetails = db.define('orderdetail', {
   ProductRevenue: {
     type: Sequelize.INTEGER,
     defaultValue: 0
-    // by cents
   },
 })
 
@@ -47,9 +46,7 @@ OrderDetails.loadSeed = async function(obj) {
       ProductCost,
       ProductRevenue
     } = obj
-    // if (!Discount) {
-    //   Discount = 0
-    // }
+
     await OrderDetails.create({
       OrderID: Math.floor(OrderID),
       ProductID,

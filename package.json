@@ -15,6 +15,7 @@
     "lint-fix": "npm run lint -- --fix",
     "prettify": "prettier --write \"**/*.{js,jsx,json,css,scss,md}\"",
     "postinstall": "touch secrets.js",
+    "direct": "node script/direct.js",
     "seed": "node script/seed.js",
     "update": "node script/updateInventory.js",
     "start": "node server",

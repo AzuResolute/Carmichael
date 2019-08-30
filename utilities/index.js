@@ -276,8 +276,6 @@ const BarGraphify = async (
     .append('text')
     .attr('x', xStart - margin)
     .attr('y', (d, i) => {
-      console.log('D ----->', i)
-      console.log(yStart - max * ((i + 1) / axisIntervals))
       return yStart - max * ((i + 1) / axisIntervals)
     })
     .attr('font-family', 'sans-serif')

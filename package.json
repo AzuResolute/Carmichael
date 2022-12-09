@@ -44,7 +44,7 @@
     "connect-session-sequelize": "^6.0.0",
     "d3": "^5.9.2",
     "d3-selection": "^1.4.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-session": "^1.15.1",
     "fs": "0.0.1-security",
     "history": "^4.9.0",
